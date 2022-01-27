@@ -3,12 +3,21 @@ import { Form, Row, Col, Radio, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Role, LoginForm } from './types';
 import Header from '../../components/Header';
+import { useRouter } from 'next/router';
 
 const Login: React.FC = () => {
+  const router = useRouter();
+
   const onFinish = (values: LoginForm) => {
-    console.log('Success:', values);
+    // some auth logic
+    localStorage.setItem('role', values['role']);
+    localStorage.setItem('email', values['email']);
+    localStorage.setItem('password', values['password']);
+
+    // redirect to dashboard
+    router.push('/dashboard');
   };
-  //   const a = 1;
+
   return (
     <>
       <Header />

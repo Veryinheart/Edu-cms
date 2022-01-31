@@ -4,7 +4,7 @@ export enum Role {
   manager = 'manager',
 }
 
-export interface LoginForm {
+export interface LoginFormValues {
   role: string;
   email: string;
   password: string;

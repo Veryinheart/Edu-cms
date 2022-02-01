@@ -9,3 +9,9 @@ export interface LoginFormValues {
   email: string;
   password: string;
 }
+
+export interface LoginResponse {
+  role: Role;
+  token: string;
+  userId: string;
+}

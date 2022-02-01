@@ -7,16 +7,25 @@ import { useRouter } from 'next/router';
 import { StyledLoginTitle } from './index.style';
 import { ValidateMessages } from '../../utils/constants/messages';
 import Link from 'next/link';
+import Axios from 'axios';
+import { AES } from 'crypto-js';
+import { API_URL } from '../../utils/constants/api';
 
 const Login: React.FC = () => {
   const router = useRouter();
 
-  const onFinish = (values: LoginFormValues) => {
-    // some auth logic
-    localStorage.setItem('role', values['role']);
-    localStorage.setItem('email', values['email']);
-    localStorage.setItem('password', values['password']);
-
+  const onFinish = async ({ password, ...rest }: LoginFormValues) => {
+    //login request
+    try {
+      const res = await Axios.post(`${API_URL}/login`, {
+        password: AES.encrypt(password, 'cms').toString(),
+        ...rest,
+      });
+      localStorage.setItem('cms', JSON.stringify(res.data.data));
+    } catch (error) {
+      console.log('error');
+      console.log(error);
+    }
     // redirect to dashboard
     router.push('/dashboard');
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Row, Col, Radio, Input, Button } from 'antd';
+import { Form, Row, Col, Radio, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Role, LoginFormValues } from './types';
 import Header from '../../components/Header';
@@ -7,9 +7,10 @@ import { useRouter } from 'next/router';
 import { StyledLoginTitle } from './index.style';
 import { ValidateMessages } from '../../utils/constants/messages';
 import Link from 'next/link';
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 import { AES } from 'crypto-js';
 import { API_URL } from '../../utils/constants/api';
+import axios from 'axios';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -17,17 +18,23 @@ const Login: React.FC = () => {
   const onFinish = async ({ password, ...rest }: LoginFormValues) => {
     //login request
     try {
-      const res = await Axios.post(`${API_URL}/login`, {
+      const res: AxiosResponse = await Axios.post(`${API_URL}/login`, {
         password: AES.encrypt(password, 'cms').toString(),
         ...rest,
       });
-      localStorage.setItem('cms', JSON.stringify(res.data.data));
-    } catch (error) {
-      console.log('error');
-      console.log(error);
+
+      localStorage.setItem('cms', JSON.stringify(res?.data.data));
+      //redirect to dashboard
+      router.push('/dashboard');
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        errorMessage(err.response?.data.msg);
+      }
     }
-    // redirect to dashboard
-    router.push('/dashboard');
+  };
+  //handle error message
+  const errorMessage = (msg: string) => {
+    message.error(msg);
   };
 
   return (

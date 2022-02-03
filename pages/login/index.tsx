@@ -24,7 +24,7 @@ const Login: React.FC = () => {
       });
 
       localStorage.setItem('cms', JSON.stringify(res?.data.data));
-      //redirect to dashboard
+
       router.push('/dashboard');
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
       }
     }
   };
-  //handle error message
+
   const errorMessage = (msg: string) => {
     message.error(msg);
   };

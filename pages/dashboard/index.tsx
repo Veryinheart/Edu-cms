@@ -13,6 +13,7 @@ import {
   EditOutlined,
   ProjectOutlined,
 } from '@ant-design/icons';
+
 import { StyledCollapsedMenu, StyledLogo, StyledHeaderLayout } from './index.style';
 import Logout from '../../components/Logout';
 
@@ -21,9 +22,6 @@ const { SubMenu } = Menu;
 
 const Dashboard: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  useEffect(() => {
-    console.log(collapsed);
-  }, [collapsed]);
 
   return (
     <>
@@ -104,10 +102,3 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
-
-// {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-//   className: 'trigger',
-//   onClick: () => {
-//     setCollapsed(!collapsed);
-//   },
-// })}

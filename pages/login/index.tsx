@@ -1,16 +1,17 @@
 import React from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import axios, { AxiosResponse } from 'axios';
 import { Form, Row, Col, Radio, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { AES } from 'crypto-js';
+
 import { Role, LoginFormValues } from './types';
 import Header from '../../components/Header';
-import { useRouter } from 'next/router';
 import { StyledLoginTitle } from './index.style';
 import { ValidateMessages } from '../../utils/constants/messages';
-import Link from 'next/link';
-import Axios, { AxiosResponse } from 'axios';
-import { AES } from 'crypto-js';
+
 import { API_URL } from '../../utils/constants/api';
-import axios from 'axios';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const Login: React.FC = () => {
   const onFinish = async ({ password, ...rest }: LoginFormValues) => {
     //login request
     try {
-      const res: AxiosResponse = await Axios.post(`${API_URL}/login`, {
+      const res: AxiosResponse = await axios.post(`${API_URL}/login`, {
         password: AES.encrypt(password, 'cms').toString(),
         ...rest,
       });
@@ -28,13 +29,9 @@ const Login: React.FC = () => {
       router.push('/dashboard');
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        errorMessage(err.response?.data.msg);
+        message.error(err.response?.data.msg);
       }
     }
-  };
-
-  const errorMessage = (msg: string) => {
-    message.error(msg);
   };
 
   return (

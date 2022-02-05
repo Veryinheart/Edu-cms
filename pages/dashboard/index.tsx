@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Breadcrumb, Tooltip } from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -13,7 +13,8 @@ import {
   EditOutlined,
   ProjectOutlined,
 } from '@ant-design/icons';
-import { StyledCollapsedMenu, StyledLogo } from './index.style';
+import { StyledCollapsedMenu, StyledLogo, StyledHeaderLayout } from './index.style';
+import Logout from '../../components/Logout';
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -61,25 +62,30 @@ const Dashboard: React.FC = () => {
           </Menu>
         </Sider>
 
-        <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ padding: '0 24px' }}>
-            <StyledCollapsedMenu>
-              {collapsed ? (
-                <MenuUnfoldOutlined
-                  className="trigger"
-                  onClick={() => {
-                    setCollapsed(!collapsed);
-                  }}
-                />
-              ) : (
-                <MenuFoldOutlined
-                  className="trigger"
-                  onClick={() => {
-                    setCollapsed(!collapsed);
-                  }}
-                />
-              )}
-            </StyledCollapsedMenu>
+        <Layout>
+          <Header>
+            <StyledHeaderLayout>
+              <StyledCollapsedMenu>
+                {collapsed ? (
+                  <MenuUnfoldOutlined
+                    onClick={() => {
+                      setCollapsed(!collapsed);
+                    }}
+                  />
+                ) : (
+                  <MenuFoldOutlined
+                    onClick={() => {
+                      setCollapsed(!collapsed);
+                    }}
+                  />
+                )}
+              </StyledCollapsedMenu>
+              <StyledCollapsedMenu>
+                <Tooltip placement="bottomRight" title={<Logout />} color={'white'}>
+                  <UserOutlined />
+                </Tooltip>
+              </StyledCollapsedMenu>
+            </StyledHeaderLayout>
           </Header>
 
           <Content style={{ margin: '0 16px' }}>

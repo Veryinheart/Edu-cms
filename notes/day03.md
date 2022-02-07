@@ -15,4 +15,21 @@ task:
 
 - 已解决， 通过 Affix 组件 设置固定 （not sure if this is best practice）
 
-3. 没有思路 如何封装 - 按照什么 标准或者 有没有 best practice
+3. 没有思路 如何封装 /code splitting - 按照什么 标准或者 有没有 best practice
+
+领域驱动设计 - 相关领域知识之后开发， 这个领域的 通用 概念/知识
+example： blockchain - smart contract/ 上链
+
+getUrl（path）{
+return path..
+}
+
+参数传递？ 单独封装或者
+get  
+post
+
+axios 拦截器
+
+业务/底层
+
+面向对象/ function 等等

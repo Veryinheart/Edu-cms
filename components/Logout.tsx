@@ -5,8 +5,8 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import axios, { AxiosResponse } from 'axios';
 
-import { API_URL } from '../utils/constants/api';
-
+import { API_URL, QueryPath } from '../utils/constants/api';
+import Storage from '../utils/service/storage';
 function Logout() {
   const router = useRouter();
 
@@ -15,14 +15,14 @@ function Logout() {
   const logout = async () => {
     try {
       const response: AxiosResponse = await axios.post(
-        `${API_URL}/logout`,
+        `${API_URL}/${QueryPath.login}`,
         {},
         {
           headers: { 'Authorization': `Bearer ${token}` },
         }
       );
       if (response) {
-        localStorage.removeItem('cms');
+        Storage.deleteUserInfo;
         router.push('/login');
       }
     } catch (error) {

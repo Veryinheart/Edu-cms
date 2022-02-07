@@ -87,6 +87,7 @@ const Dashboard: React.FC = () => {
               >
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               </StyledCollapsedMenu>
+
               <StyledCollapsedMenu>
                 <Space size="large">
                   <BellOutlined />
@@ -104,6 +105,7 @@ const Dashboard: React.FC = () => {
               <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
               <Breadcrumb.Item>Overview</Breadcrumb.Item>
             </Breadcrumb>
+
             <div className="site-layout-background" style={{ padding: 24, height: 3360 }}>
               something with chart, map, table
             </div>

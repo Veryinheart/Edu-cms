@@ -11,21 +11,22 @@ import Header from '../../components/Header';
 import { StyledLoginTitle } from './index.style';
 import { ValidateMessages } from '../../utils/constants/messages';
 
-import { API_URL } from '../../utils/constants/api';
+import { API_URL, QueryPath } from '../../utils/constants/api';
+
+import Storage from '../../utils/service/storage';
 
 const Login: React.FC = () => {
   const router = useRouter();
 
-  const onFinish = async ({ password, ...rest }: LoginFormValues) => {
+  const login = async ({ password, ...rest }: LoginFormValues) => {
     //login request
     try {
-      const res: AxiosResponse = await axios.post(`${API_URL}/login`, {
+      const res: AxiosResponse = await axios.post(`${API_URL}/${QueryPath.login}`, {
         password: AES.encrypt(password, 'cms').toString(),
         ...rest,
       });
 
-      localStorage.setItem('cms', JSON.stringify(res?.data.data));
-
+      Storage.setUserInfo(res?.data.data);
       router.push('/dashboard');
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -44,7 +45,7 @@ const Login: React.FC = () => {
         <Col md={8} sm={24}>
           <Form
             name="login"
-            onFinish={onFinish}
+            onFinish={login}
             autoComplete="off"
             validateMessages={ValidateMessages}
           >

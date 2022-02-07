@@ -10,9 +10,7 @@ import { Role, LoginFormValues } from './types';
 import Header from '../../components/Header';
 import { StyledLoginTitle } from './index.style';
 import { ValidateMessages } from '../../utils/constants/messages';
-
-import { API_URL, QueryPath } from '../../utils/constants/api';
-
+import { API_URL, QueryPath } from '../../utils/constants/api-path';
 import Storage from '../../utils/service/storage';
 
 const Login: React.FC = () => {

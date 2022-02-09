@@ -15,14 +15,22 @@ import {
   BellOutlined,
 } from '@ant-design/icons';
 
-import { StyledCollapsedMenu, StyledHeaderLayout, Logo } from './index.style';
-import Logout from '../../components/Logout';
+import {
+  StyledCollapsedMenu,
+  StyledHeaderLayout,
+  Logo,
+  StyledContent,
+  // StyledBreadcrumbContainer,
+} from './index.style';
+import Logout from '../Logout';
 import Link from 'next/link';
+import { StyledBreadcrumbContainer } from './index.style';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
-const Dashboard: React.FC = () => {
+const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
+  const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -100,15 +108,13 @@ const Dashboard: React.FC = () => {
             </StyledHeaderLayout>
           </Affix>
 
-          <Content style={{ margin: '0 16px' }}>
-            <Breadcrumb style={{ margin: '16px 0' }}>
+          <Content>
+            <StyledBreadcrumbContainer>
               <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
               <Breadcrumb.Item>Overview</Breadcrumb.Item>
-            </Breadcrumb>
+            </StyledBreadcrumbContainer>
 
-            <div className="site-layout-background" style={{ padding: 24, height: 3360 }}>
-              something with chart, map, table bulabulabula
-            </div>
+            <StyledContent>{children}</StyledContent>
           </Content>
         </Layout>
       </Layout>

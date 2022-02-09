@@ -9,8 +9,8 @@ import { API_URL, QueryPath } from '../utils/constants/api-path';
 import Storage from '../utils/service/storage';
 function Logout() {
   const router = useRouter();
-
-  const { token } = JSON.parse(localStorage.getItem('cms') || '');
+  const token = Storage.token;
+  // const { token } = JSON.parse(localStorage.getItem('cms') || '');
 
   const logout = async () => {
     try {

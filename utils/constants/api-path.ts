@@ -10,3 +10,8 @@ export enum ActionPath {
   get = 'get',
   post = 'post',
 }
+
+export interface Paginator {
+  page: number;
+  limit: number;
+}

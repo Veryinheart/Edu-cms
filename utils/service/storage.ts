@@ -11,7 +11,7 @@ export class Storage {
 
   get userInfo(): UserInfo {
     try {
-      return JSON.parse(localStorage.getItem(this.key)!) as UserInfo;
+      return JSON.parse(localStorage.getItem(this.key) as string) as UserInfo;
     } catch (error) {
       return null;
     }

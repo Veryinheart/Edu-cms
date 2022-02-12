@@ -1,30 +1,28 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Breadcrumb, Tooltip, Affix, Space } from 'antd';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  SolutionOutlined,
+  BellOutlined,
   DashboardOutlined,
   DeploymentUnitOutlined,
-  UserOutlined,
-  MessageOutlined,
-  ReadOutlined,
-  FileAddOutlined,
   EditOutlined,
+  FileAddOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  MessageOutlined,
   ProjectOutlined,
-  BellOutlined,
+  ReadOutlined,
+  SolutionOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
-
-import {
-  StyledCollapsedMenu,
-  StyledHeaderLayout,
-  Logo,
-  StyledContent,
-  // StyledBreadcrumbContainer,
-} from './index.style';
-import Logout from '../Logout';
+import { Affix, Breadcrumb, Layout, Menu, Space, Tooltip } from 'antd';
 import Link from 'next/link';
-import { StyledBreadcrumbContainer } from './index.style';
+import React, { useState } from 'react';
+import Logout from '../Logout';
+import {
+  Logo,
+  StyledBreadcrumbContainer,
+  StyledCollapsedMenu,
+  StyledContent,
+  StyledHeaderLayout,
+} from './index.style';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -47,7 +45,7 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
           >
             {
               <Logo>
-                <Link href="/">
+                <Link href="/" passHref={true}>
                   <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
                 </Link>
               </Logo>
@@ -58,9 +56,11 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
                 Overview
               </Menu.Item>
               <SubMenu key="sub1" icon={<SolutionOutlined />} title="Student">
-                <Menu.Item key="abc" icon={<UserOutlined />}>
-                  Student List
-                </Menu.Item>
+                <Link href="/dashboard/manager/students" passHref>
+                  <Menu.Item key="abc" icon={<UserOutlined />}>
+                    Student List
+                  </Menu.Item>
+                </Link>
               </SubMenu>
               <SubMenu key="sub2" icon={<DeploymentUnitOutlined />} title="Teacher">
                 <Menu.Item key="add" icon={<UserOutlined />}>

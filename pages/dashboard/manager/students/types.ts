@@ -14,3 +14,14 @@ export interface CourseType {
   courseId: number;
   name: string;
 }
+
+export interface AddStudentRequest {
+  name: string;
+  email: string;
+  country: string;
+  type: number;
+}
+
+export interface UpdateStudentRequest extends AddStudentRequest {
+  id: number;
+}

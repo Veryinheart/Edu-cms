@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
             </Breadcrumb>
 
             <div className="site-layout-background" style={{ padding: 24, height: 3360 }}>
-              something with chart, map, table bulabulabula
+              something with chart, map, table
             </div>
           </Content>
         </Layout>

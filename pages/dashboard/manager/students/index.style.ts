@@ -1,4 +1,4 @@
-import { Input } from 'antd';
+import { Form, Input } from 'antd';
 import styled from 'styled-components';
 
 export const FlexContainer = styled.div`
@@ -19,3 +19,12 @@ export const StyledPaginationContainer = styled.div`
   align-items: center;
   margin-top: 10px;
 `;
+
+export const ModalFormSubmit = styled(Form.Item)`
+  position: absolute;
+  bottom: 0;
+  right: 8em;
+  margin-bottom: 10px;
+`;
+
+// export const AddAndEditStudentForm = styled(Form)``;

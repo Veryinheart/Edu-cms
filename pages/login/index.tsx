@@ -1,17 +1,16 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, message, Radio, Row } from 'antd';
 import axios, { AxiosResponse } from 'axios';
-import { Form, Row, Col, Radio, Input, Button, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { AES } from 'crypto-js';
-
-import { Role, LoginFormValues } from './types';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React from 'react';
 import Header from '../../components/Header';
-import { StyledLoginTitle } from './index.style';
-import { ValidateMessages } from '../../utils/constants/messages';
 import { API_URL, QueryPath } from '../../utils/constants/api-path';
+import { ValidateMessages } from '../../utils/constants/messages';
 import Storage from '../../utils/service/storage';
+import { StyledLoginTitle } from './index.style';
+import { LoginFormValues, Role } from './types';
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -25,9 +24,10 @@ const Login: React.FC = () => {
       });
 
       Storage.setUserInfo(res?.data.data);
-      router.push('/dashboard');
+      router.push('/dashboard/manager/students');
     } catch (err) {
       if (axios.isAxiosError(err)) {
+        console.log(err.response);
         message.error(err.response?.data.msg);
       }
     }

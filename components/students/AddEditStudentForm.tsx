@@ -18,13 +18,17 @@ interface IProps {
     student: Student | null;
     edit: boolean;
   };
+  isModalVisible: boolean;
 }
 
 function AddEditStudentForm(props: IProps) {
   const [form] = Form.useForm();
-  const { isEditingStudent, setIsModalVisible } = props;
+  const { isEditingStudent, setIsModalVisible, isModalVisible } = props;
   // console.log(student);
   // console.log(student.student.id);
+  if (!isModalVisible) {
+    form.resetFields();
+  }
 
   async function handleEditStudent(param: UpdateStudentRequest) {
     // console.log(student.student.id)

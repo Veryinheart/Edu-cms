@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, message, Modal, Space, Table } from 'antd';
+import { Button, message, Modal, Space, Table, Popconfirm } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import TextLink from 'antd/lib/typography/Link';
 import axios, { AxiosResponse } from 'axios';
@@ -13,6 +13,7 @@ import { businessAreas } from '../../../../utils/constants/common';
 import Storage from '../../../../utils/service/storage';
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
+import { axiosWithToken } from '../../../../utils/service/api';
 
 function StudentList() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
@@ -36,11 +37,9 @@ function StudentList() {
   // };
 
   const handleCancel = () => {
-    form.resetFields();
     setIsModalVisible(false);
   };
   const token = Storage.token;
-  const [form] = Form.useForm();
 
   // const handleEditStudent = async (record: Student) => {
   //   // console.log()
@@ -129,7 +128,7 @@ function StudentList() {
         { text: 'developer', value: 'developer' },
         { text: 'tester', value: 'tester' },
       ],
-      onFilter: (value: string, record: Student) => record.type.name === value,
+      onFilter: (value: string, record: Student): boolean => record?.type?.name === value,
       render: (type: { id: number; name: string }) => type?.name,
     },
     {
@@ -144,16 +143,35 @@ function StudentList() {
         <Space size="middle">
           <TextLink
             onClick={() => {
-              // console.log(record);
               setIsEditingStudent({ ...isEditingStudent, student: record, edit: true });
-              // console.log(isEditingStudent);
               setIsModalVisible(true);
             }}
           >
             Edit
           </TextLink>
+          <Popconfirm
+            title="Are you sure to delete?"
+            onConfirm={async () => {
+              console.log(record);
+              try {
+                const res = await axiosWithToken.delete(`${QueryPath.students}/${record.id}`);
 
-          <TextLink>Delete</TextLink>
+                if (res && res.data.code === 200 && res.data.msg === 'success') {
+                  const index = data.findIndex((item) => item.id === record.id);
+                  const updatedData = [...data];
+                  updatedData.splice(index, 1);
+                  setData(updatedData);
+                  setTotal(total - 1);
+                }
+              } catch (error) {
+                if (axios.isAxiosError(error)) {
+                  message.error(error.response?.data.msg);
+                }
+              }
+            }}
+          >
+            <TextLink>Delete</TextLink>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -169,9 +187,7 @@ function StudentList() {
           }
         );
         if (res) {
-          // console.log(res.data.data);
           setData(res.data.data.students);
-          console.log(res.data.data);
           setTotal(res.data.data.total);
           setDataFiltered(res.data.data.students);
         }
@@ -227,6 +243,7 @@ function StudentList() {
         <AddEditStudentForm
           isEditingStudent={isEditingStudent}
           setIsModalVisible={setIsModalVisible}
+          isModalVisible={isModalVisible}
         />
       </Modal>
     </DashboardLayout>

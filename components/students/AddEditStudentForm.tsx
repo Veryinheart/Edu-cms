@@ -25,7 +25,6 @@ interface IProps {
 function StudentForm(props: IProps) {
   const [form] = Form.useForm();
   const { isEditingStudent, setIsModalVisible, isModalVisible, fetchData } = props;
-  console.log(isEditingStudent);
 
   if (!isModalVisible) {
     form.resetFields();
@@ -38,14 +37,12 @@ function StudentForm(props: IProps) {
         id: isEditingStudent?.student?.id as number,
       });
       if (res) {
-        // console.log(res);
         form.resetFields();
         setIsModalVisible(false);
         message.success('successfully updated student information');
         fetchData();
       }
     } catch (error) {
-      // console.log(error.response);
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }
@@ -53,7 +50,6 @@ function StudentForm(props: IProps) {
   };
 
   const handleAddStudent = async (param: AddStudentRequest) => {
-    // console.log(param);
     try {
       const res: AxiosResponse = await axiosWithToken.post(`${QueryPath.students}`, param);
       if (res && res.data.code === 201 && res.data.msg === 'success') {
@@ -64,7 +60,6 @@ function StudentForm(props: IProps) {
         fetchData();
       }
     } catch (error) {
-      // console.log(error.response);
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }
@@ -81,10 +76,10 @@ function StudentForm(props: IProps) {
         isEditingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
       }}
       initialValues={{
-        name: isEditingStudent?.student?.name,
-        email: isEditingStudent?.student?.email,
-        country: isEditingStudent?.student?.country,
-        type: isEditingStudent?.student?.type?.id,
+        name: isEditingStudent.edit ? isEditingStudent?.student?.name : '',
+        email: isEditingStudent.edit ? isEditingStudent?.student?.email : '',
+        country: isEditingStudent.edit ? isEditingStudent?.student?.country : '',
+        type: isEditingStudent.edit ? isEditingStudent?.student?.type?.id : '',
       }}
     >
       <Form.Item label="Name" name="name" rules={[{ required: true }]}>

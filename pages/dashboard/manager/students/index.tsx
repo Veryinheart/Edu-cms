@@ -26,7 +26,11 @@ function StudentList() {
   }>({ student: null, edit: false });
 
   const showModal = () => {
-    setIsEditingStudent({ ...isEditingStudent, student: null, edit: false });
+    setIsEditingStudent((isEditingStudent) => ({
+      ...isEditingStudent,
+      student: null,
+      edit: false,
+    }));
     setIsModalVisible(true);
   };
 
@@ -94,7 +98,11 @@ function StudentList() {
         <Space size="middle">
           <TextLink
             onClick={() => {
-              setIsEditingStudent({ ...isEditingStudent, student: record, edit: true });
+              setIsEditingStudent((isEditingStudent) => ({
+                ...isEditingStudent,
+                student: record,
+                edit: true,
+              }));
               setIsModalVisible(true);
             }}
           >
@@ -125,11 +133,11 @@ function StudentList() {
   ];
 
   const fetchData = useCallback(async () => {
-    // console.log('first fetch component mount');
     const res: AxiosResponse = await axiosWithToken.get(
       `${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`
     );
     if (res) {
+      // console.log(res.data.data.students);
       // setData(res.data.data.students);
       setTotal(res.data.data.total);
       setDataFiltered(res.data.data.students);

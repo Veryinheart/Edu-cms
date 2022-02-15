@@ -19,36 +19,38 @@ interface IProps {
     edit: boolean;
   };
   isModalVisible: boolean;
+  fetchData: () => void;
 }
 
-function AddEditStudentForm(props: IProps) {
+function StudentForm(props: IProps) {
   const [form] = Form.useForm();
-  const { isEditingStudent, setIsModalVisible, isModalVisible } = props;
-  // console.log(student);
-  // console.log(student.student.id);
+  const { isEditingStudent, setIsModalVisible, isModalVisible, fetchData } = props;
+  console.log(isEditingStudent);
+
   if (!isModalVisible) {
     form.resetFields();
   }
 
-  async function handleEditStudent(param: UpdateStudentRequest) {
-    // console.log(student.student.id)
+  const handleEditStudent = async (param: UpdateStudentRequest) => {
     try {
       const res: AxiosResponse = await axiosWithToken.put(`${QueryPath.students}`, {
         ...param,
         id: isEditingStudent?.student?.id as number,
       });
       if (res) {
-        console.log(res);
+        // console.log(res);
         form.resetFields();
         setIsModalVisible(false);
         message.success('successfully updated student information');
+        fetchData();
       }
     } catch (error) {
+      // console.log(error.response);
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }
     }
-  }
+  };
 
   const handleAddStudent = async (param: AddStudentRequest) => {
     // console.log(param);
@@ -59,8 +61,10 @@ function AddEditStudentForm(props: IProps) {
         form.resetFields();
         setIsModalVisible(false);
         message.success('successfully added student information');
+        fetchData();
       }
     } catch (error) {
+      // console.log(error.response);
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }
@@ -75,7 +79,12 @@ function AddEditStudentForm(props: IProps) {
       validateMessages={ValidateMessages}
       onFinish={(param) => {
         isEditingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
-        // console.log(param);
+      }}
+      initialValues={{
+        name: isEditingStudent?.student?.name,
+        email: isEditingStudent?.student?.email,
+        country: isEditingStudent?.student?.country,
+        type: isEditingStudent?.student?.type?.id,
       }}
     >
       <Form.Item label="Name" name="name" rules={[{ required: true }]}>
@@ -108,4 +117,4 @@ function AddEditStudentForm(props: IProps) {
   );
 }
 
-export default AddEditStudentForm;
+export default StudentForm;

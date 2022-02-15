@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons';
 import { Affix, Breadcrumb, Layout, Menu, Space, Tooltip } from 'antd';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Logout from '../Logout';
 import {
@@ -28,8 +29,11 @@ const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
+  const router = useRouter();
+  console.log(router);
+
   const { children } = props;
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <>
@@ -56,11 +60,11 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
                 Overview
               </Menu.Item>
               <SubMenu key="sub1" icon={<SolutionOutlined />} title="Student">
-                <Link href="/dashboard/manager/students" passHref>
-                  <Menu.Item key="abc" icon={<UserOutlined />}>
+                <Menu.Item key="abc" icon={<UserOutlined />}>
+                  <Link href="/dashboard/manager/students" passHref>
                     Student List
-                  </Menu.Item>
-                </Link>
+                  </Link>
+                </Menu.Item>
               </SubMenu>
               <SubMenu key="sub2" icon={<DeploymentUnitOutlined />} title="Teacher">
                 <Menu.Item key="add" icon={<UserOutlined />}>
@@ -111,7 +115,12 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
           <Content>
             <StyledBreadcrumbContainer>
               <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
-              <Breadcrumb.Item>Overview</Breadcrumb.Item>
+              <Breadcrumb.Item>Student</Breadcrumb.Item>
+              <Breadcrumb.Item>Student List</Breadcrumb.Item>
+              {/* {
+                 &&
+              } */}
+              <Breadcrumb.Item>Detail</Breadcrumb.Item>
             </StyledBreadcrumbContainer>
 
             <StyledContent>{children}</StyledContent>

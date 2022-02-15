@@ -27,4 +27,9 @@ export const ModalFormSubmit = styled(Form.Item)`
   margin-bottom: 10px;
 `;
 
+export const H3 = styled.h3`
+  color: #7356f1;
+  margin: 20px 0px;
+  font-size: 24px;
+`;
 // export const AddAndEditStudentForm = styled(Form)``;

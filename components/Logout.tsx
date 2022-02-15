@@ -15,7 +15,7 @@ function Logout() {
   const logout = async () => {
     try {
       const response: AxiosResponse = await axios.post(
-        `${API_URL}/${QueryPath.login}`,
+        `${API_URL}/${QueryPath.logout}`,
         {},
         {
           headers: { 'Authorization': `Bearer ${token}` },

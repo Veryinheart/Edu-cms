@@ -1,26 +1,24 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Modal, Space, Table, Popconfirm } from 'antd';
+import { Button, message, Modal, Popconfirm, Space, Table } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import TextLink from 'antd/lib/typography/Link';
 import axios, { AxiosResponse } from 'axios';
 import _ from 'lodash';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
-import AddEditStudentForm from '../../../../components/students/AddEditStudentForm';
-import { API_URL, QueryPath } from '../../../../utils/constants/api-path';
+import StudentForm from '../../../../components/students/AddEditStudentForm';
+import { QueryPath } from '../../../../utils/constants/api-path';
 import { businessAreas } from '../../../../utils/constants/common';
-import Storage from '../../../../utils/service/storage';
+import { axiosWithToken } from '../../../../utils/service/api';
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
-import { axiosWithToken } from '../../../../utils/service/api';
 
 function StudentList() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
-  const [data, setData] = useState<Student[]>([]);
+  // const [data, setData] = useState<Student[]>([]);
   const [total, setTotal] = useState(0);
   const [dataFiltered, setDataFiltered] = useState<Student[]>([]);
-
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditingStudent, setIsEditingStudent] = useState<{
     student: Student | null;
@@ -32,57 +30,10 @@ function StudentList() {
     setIsModalVisible(true);
   };
 
-  // const handleOk = () => {
-  //   setIsModalVisible(false);
-  // };
-
   const handleCancel = () => {
+    Modal.destroyAll();
     setIsModalVisible(false);
   };
-  const token = Storage.token;
-
-  // const handleEditStudent = async (record: Student) => {
-  //   // console.log()
-  //   setIsEditingStudent(true);
-  //   return null;
-  //   try {
-  //     const res: AxiosResponse = await axios.put(
-  //       `${API_URL}/${QueryPath.students}`,
-  //       {
-  //         id: record.id,
-  //         name: record.name,
-  //         email: record.email,
-  //         country: record.country,
-  //         type: record.type,
-  //       },
-  //       {
-  //         headers: { 'Authorization': `Bearer ${token}` },
-  //       }
-  //     );
-  //     console.log(res);
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error)) {
-  //       message.error(error.response?.data.msg);
-  //     }
-  //   }
-  // };
-
-  // const handleAddStudent = async (param: EditStudentRequest) => {
-  //   // console.log(param);
-  //   try {
-  //     const res: AxiosResponse = await axiosWithToken.post(`${QueryPath.students}`, param);
-  //     if (res && res.data.code === 201 && res.data.msg === 'success') {
-  //       console.log(res.data);
-  //       setIsModalVisible(false);
-  //       form.resetFields();
-  //       message.success('successfully added student information');
-  //     }
-  //   } catch (error) {
-  //     if (axios.isAxiosError(error)) {
-  //       message.error(error.response?.data.msg);
-  //     }
-  //   }
-  // };
 
   const columns: ColumnType<Student>[] = [
     {
@@ -152,16 +103,12 @@ function StudentList() {
           <Popconfirm
             title="Are you sure to delete?"
             onConfirm={async () => {
-              console.log(record);
               try {
                 const res = await axiosWithToken.delete(`${QueryPath.students}/${record.id}`);
 
                 if (res && res.data.code === 200 && res.data.msg === 'success') {
-                  const index = data.findIndex((item) => item.id === record.id);
-                  const updatedData = [...data];
-                  updatedData.splice(index, 1);
-                  setData(updatedData);
-                  setTotal(total - 1);
+                  fetchData();
+                  message.success('successfully deleted student');
                 }
               } catch (error) {
                 if (axios.isAxiosError(error)) {
@@ -177,29 +124,21 @@ function StudentList() {
     },
   ];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res: AxiosResponse = await axios.get(
-          `${API_URL}/${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`,
-          {
-            headers: { 'Authorization': `Bearer ${token}` },
-          }
-        );
-        if (res) {
-          setData(res.data.data.students);
-          setTotal(res.data.data.total);
-          setDataFiltered(res.data.data.students);
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          message.error(error.response?.data.msg);
-        }
-      }
-    };
+  const fetchData = useCallback(async () => {
+    // console.log('first fetch component mount');
+    const res: AxiosResponse = await axiosWithToken.get(
+      `${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`
+    );
+    if (res) {
+      // setData(res.data.data.students);
+      setTotal(res.data.data.total);
+      setDataFiltered(res.data.data.students);
+    }
+  }, [paginator]);
 
+  useEffect(() => {
     fetchData();
-  }, [paginator, token]);
+  }, [fetchData]);
 
   return (
     <DashboardLayout>
@@ -210,9 +149,19 @@ function StudentList() {
         <StyledSearch
           placeholder="Search by name"
           allowClear
-          onChange={_.debounce((event) => {
-            const result = data.filter((item) => item.name.includes(event.target.value));
-            setDataFiltered(result);
+          onChange={_.debounce(async (event) => {
+            try {
+              const res: AxiosResponse = await axiosWithToken.get(
+                `${QueryPath.students}/?query=${event.target.value}&page=1&limit=20`
+              );
+              if (res) {
+                setDataFiltered(res.data.data.students);
+              }
+            } catch (error) {
+              if (axios.isAxiosError(error)) {
+                message.error(error.response?.data.msg);
+              }
+            }
           }, 1000)}
         />
       </FlexContainer>
@@ -240,10 +189,11 @@ function StudentList() {
           </Button>,
         ]}
       >
-        <AddEditStudentForm
+        <StudentForm
           isEditingStudent={isEditingStudent}
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
+          fetchData={fetchData}
         />
       </Modal>
     </DashboardLayout>

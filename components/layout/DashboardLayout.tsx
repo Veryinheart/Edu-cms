@@ -116,11 +116,12 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
             <StyledBreadcrumbContainer>
               <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
               <Breadcrumb.Item>Student</Breadcrumb.Item>
-              <Breadcrumb.Item>Student List</Breadcrumb.Item>
-              {/* {
-                 &&
-              } */}
-              <Breadcrumb.Item>Detail</Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Link href="/dashboard/manager/students">Student List</Link>
+              </Breadcrumb.Item>
+              {router.pathname === '/dashboard/manager/students/[id]' ? (
+                <Breadcrumb.Item>Detail</Breadcrumb.Item>
+              ) : null}
             </StyledBreadcrumbContainer>
 
             <StyledContent>{children}</StyledContent>

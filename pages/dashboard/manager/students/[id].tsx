@@ -48,7 +48,7 @@ function Page() {
   const fetchStudentDetail = useCallback(async () => {
     try {
       const res = await axiosWithToken.get(`${QueryPath.students}/${router.query.id}`);
-      // console.log(res.data.data);
+      console.log(res.data.data);
 
       const info = [
         { label: 'Name', value: res.data.data.name },
@@ -72,13 +72,13 @@ function Page() {
       setInfo(info);
       setCourses(res.data.data.courses);
       setAbout(about);
-      setData(data);
+      setData(res.data.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }
     }
-  }, [router.query.id, data]);
+  }, [router.query.id]);
 
   useEffect(() => {
     fetchStudentDetail();

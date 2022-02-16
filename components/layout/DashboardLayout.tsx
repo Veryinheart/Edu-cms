@@ -30,10 +30,8 @@ const { SubMenu } = Menu;
 
 const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
   const router = useRouter();
-  console.log(router);
-
   const { children } = props;
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <>
@@ -55,19 +53,19 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
               </Logo>
             }
 
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
               <Menu.Item key="1" icon={<DashboardOutlined />}>
                 Overview
               </Menu.Item>
               <SubMenu key="sub1" icon={<SolutionOutlined />} title="Student">
-                <Menu.Item key="abc" icon={<UserOutlined />}>
+                <Menu.Item key="2" icon={<UserOutlined />}>
                   <Link href="/dashboard/manager/students" passHref>
                     Student List
                   </Link>
                 </Menu.Item>
               </SubMenu>
               <SubMenu key="sub2" icon={<DeploymentUnitOutlined />} title="Teacher">
-                <Menu.Item key="add" icon={<UserOutlined />}>
+                <Menu.Item key="3" icon={<UserOutlined />}>
                   Teacher List
                 </Menu.Item>
               </SubMenu>
@@ -75,14 +73,14 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
                 <Menu.Item key="All-Course" icon={<ProjectOutlined />}>
                   All Course
                 </Menu.Item>
-                <Menu.Item key="Add-COurse" icon={<FileAddOutlined />}>
+                <Menu.Item key="Add-Course" icon={<FileAddOutlined />}>
                   Add Course
                 </Menu.Item>
                 <Menu.Item key="Edit-Course" icon={<EditOutlined />}>
                   Edit Course
                 </Menu.Item>
               </SubMenu>
-              <Menu.Item key="3" icon={<MessageOutlined />}>
+              <Menu.Item key="4" icon={<MessageOutlined />}>
                 Message
               </Menu.Item>
             </Menu>

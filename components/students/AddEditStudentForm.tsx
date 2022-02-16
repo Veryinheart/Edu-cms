@@ -1,6 +1,6 @@
 import { Button, Form, Input, message, Select } from 'antd';
 import axios, { AxiosResponse } from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ModalFormSubmit } from '../../pages/dashboard/manager/students/index.style';
 import {
   AddStudentRequest,
@@ -14,7 +14,7 @@ import { axiosWithToken } from '../../utils/service/api';
 
 interface IProps {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  isEditingStudent: {
+  EditingStudent: {
     student: Student | null;
     edit: boolean;
   };
@@ -24,17 +24,25 @@ interface IProps {
 
 function StudentForm(props: IProps) {
   const [form] = Form.useForm();
-  const { isEditingStudent, setIsModalVisible, isModalVisible, fetchData } = props;
+  const { EditingStudent, setIsModalVisible, fetchData } = props;
 
-  if (!isModalVisible) {
-    form.resetFields();
-  }
+  console.log(EditingStudent);
+  // if (!isModalVisible) {
+  //   form.resetFields();
+  // }
+  useEffect(() => {
+    form.setFieldsValue({ ...EditingStudent.student, type: EditingStudent?.student?.type?.id });
+
+    return () => {
+      form.resetFields();
+    };
+  }, [EditingStudent, form]);
 
   const handleEditStudent = async (param: UpdateStudentRequest) => {
     try {
       const res: AxiosResponse = await axiosWithToken.put(`${QueryPath.students}`, {
         ...param,
-        id: isEditingStudent?.student?.id as number,
+        id: EditingStudent?.student?.id as number,
       });
       if (res) {
         form.resetFields();
@@ -73,13 +81,7 @@ function StudentForm(props: IProps) {
       wrapperCol={{ offset: 1 }}
       validateMessages={ValidateMessages}
       onFinish={(param) => {
-        isEditingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
-      }}
-      initialValues={{
-        name: isEditingStudent.edit ? isEditingStudent?.student?.name : '',
-        email: isEditingStudent.edit ? isEditingStudent?.student?.email : '',
-        country: isEditingStudent.edit ? isEditingStudent?.student?.country : '',
-        type: isEditingStudent.edit ? isEditingStudent?.student?.type?.id : '',
+        EditingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
       }}
     >
       <Form.Item label="Name" name="name" rules={[{ required: true }]}>
@@ -105,7 +107,7 @@ function StudentForm(props: IProps) {
       </Form.Item>
       <ModalFormSubmit>
         <Button type="primary" htmlType="submit">
-          {isEditingStudent.edit ? 'Update' : 'Add'}
+          {EditingStudent.edit ? 'Update' : 'Add'}
         </Button>
       </ModalFormSubmit>
     </Form>

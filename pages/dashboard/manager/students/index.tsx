@@ -20,14 +20,14 @@ function StudentList() {
   const [total, setTotal] = useState(0);
   const [dataFiltered, setDataFiltered] = useState<Student[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditingStudent, setIsEditingStudent] = useState<{
+  const [EditingStudent, setEditingStudent] = useState<{
     student: Student | null;
     edit: boolean;
   }>({ student: null, edit: false });
 
   const showModal = () => {
-    setIsEditingStudent((isEditingStudent) => ({
-      ...isEditingStudent,
+    setEditingStudent((EditingStudent) => ({
+      ...EditingStudent,
       student: null,
       edit: false,
     }));
@@ -64,7 +64,10 @@ function StudentList() {
       dataIndex: 'country',
       width: '10%',
       filters: businessAreas.map((item) => ({ text: item, value: item })),
-      onFilter: (value: string, record: Student): boolean => record.country.includes(value),
+      onFilter: (value, record): boolean => {
+        console.log(value);
+        return record.country.includes(value as string);
+      },
     },
     {
       title: 'Email',
@@ -83,7 +86,7 @@ function StudentList() {
         { text: 'developer', value: 'developer' },
         { text: 'tester', value: 'tester' },
       ],
-      onFilter: (value: string, record: Student): boolean => record?.type?.name === value,
+      onFilter: (value, record): boolean => record?.type?.name === value,
       render: (type: { id: number; name: string }) => type?.name,
     },
     {
@@ -98,8 +101,8 @@ function StudentList() {
         <Space size="middle">
           <TextLink
             onClick={() => {
-              setIsEditingStudent((isEditingStudent) => ({
-                ...isEditingStudent,
+              setEditingStudent((EditingStudent) => ({
+                ...EditingStudent,
                 student: record,
                 edit: true,
               }));
@@ -187,7 +190,7 @@ function StudentList() {
         }}
       />
       <Modal
-        title={isEditingStudent.edit ? 'Edit student' : 'Add Student'}
+        title={EditingStudent.edit ? 'Edit student' : 'Add Student'}
         centered
         visible={isModalVisible}
         onCancel={handleCancel}
@@ -198,7 +201,7 @@ function StudentList() {
         ]}
       >
         <StudentForm
-          isEditingStudent={isEditingStudent}
+          EditingStudent={EditingStudent}
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
           fetchData={fetchData}

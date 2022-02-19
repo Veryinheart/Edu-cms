@@ -7,10 +7,10 @@ import {
   Student,
   UpdateStudentRequest,
 } from '../../pages/dashboard/manager/students/types';
-import { QueryPath } from '../../utils/constants/api-path';
+import { QueryPath } from '../../utils/constants/api';
 import { businessAreas } from '../../utils/constants/common';
 import { ValidateMessages } from '../../utils/constants/messages';
-import { axiosWithToken } from '../../utils/service/api';
+import { axiosWithToken } from '../../utils/service/apiConfig';
 
 interface IProps {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;

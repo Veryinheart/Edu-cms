@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { useEffect } from 'react';
-import { axiosWithToken } from '../../../../utils/service/api';
-import { QueryPath } from '../../../../utils/constants/api-path';
+import { axiosWithToken } from '../../../../utils/service/apiConfig';
+import { QueryPath } from '../../../../utils/constants/api';
 import { useRouter } from 'next/router';
 import { BaseType, CourseType, StudentResponse } from './types';
 import { Avatar, Card, Col, Layout, message, Row, Table, Tabs, Tag } from 'antd';

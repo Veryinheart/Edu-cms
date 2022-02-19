@@ -5,7 +5,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import axios, { AxiosResponse } from 'axios';
 
-import { API_URL, QueryPath } from '../utils/constants/api-path';
+import { API_URL, QueryPath } from '../utils/constants/api';
 import Storage from '../utils/service/storage';
 function Logout() {
   const router = useRouter();

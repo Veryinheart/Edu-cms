@@ -8,9 +8,9 @@ import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import StudentForm from '../../../../components/students/AddEditStudentForm';
-import { QueryPath } from '../../../../utils/constants/api-path';
+import { QueryPath } from '../../../../utils/constants/api';
 import { businessAreas } from '../../../../utils/constants/common';
-import { axiosWithToken } from '../../../../utils/service/api';
+import { axiosWithToken } from '../../../../utils/service/apiConfig';
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
 

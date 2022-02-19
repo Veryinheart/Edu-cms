@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Header from '../../components/Header';
-import { API_URL, QueryPath } from '../../utils/constants/api-path';
+import { API_URL, QueryPath } from '../../utils/constants/api';
 import { ValidateMessages } from '../../utils/constants/messages';
 import Storage from '../../utils/service/storage';
 import { StyledLoginTitle } from './index.style';

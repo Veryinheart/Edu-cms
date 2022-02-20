@@ -11,6 +11,7 @@ import StudentForm from '../../../../components/students/AddEditStudentForm';
 import { QueryPath } from '../../../../utils/constants/api';
 import { businessAreas } from '../../../../utils/constants/common';
 import { axiosWithToken } from '../../../../utils/service/apiConfig';
+import { studentService } from '../../../../utils/service/request';
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
 
@@ -18,7 +19,7 @@ function StudentList() {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
   // const [data, setData] = useState<Student[]>([]);
   const [total, setTotal] = useState(0);
-  const [dataFiltered, setDataFiltered] = useState<Student[]>([]);
+  const [dataFiltered, setDataFiltered] = useState<Student[] | undefined>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [EditingStudent, setEditingStudent] = useState<{
     student: Student | null;
@@ -115,9 +116,10 @@ function StudentList() {
             title="Are you sure to delete?"
             onConfirm={async () => {
               try {
-                const res = await axiosWithToken.delete(`${QueryPath.students}/${record.id}`);
-
-                if (res && res.data.code === 200 && res.data.msg === 'success') {
+                console.log(record.id);
+                // const res = await axiosWithToken.delete(`${QueryPath.students}/${record.id}`);
+                const res = await studentService.deleteStudent(record.id);
+                if (res && res?.code === 200 && res?.msg === 'success') {
                   fetchData();
                   message.success('successfully deleted student');
                 }
@@ -136,14 +138,16 @@ function StudentList() {
   ];
 
   const fetchData = useCallback(async () => {
-    const res: AxiosResponse = await axiosWithToken.get(
-      `${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`
-    );
+    // const res: AxiosResponse = await axiosWithToken.get(
+    //   `${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`
+    // );
+    const res = await studentService.findStudents(paginator.page, paginator.limit);
+    console.log(res);
     if (res) {
       // console.log(res.data.data.students);
-      // setData(res.data.data.students);
-      setTotal(res.data.data.total);
-      setDataFiltered(res.data.data.students);
+      // setData(res?.data?.students);
+      setTotal(res?.data?.total as number);
+      setDataFiltered(res?.data?.students);
     }
   }, [paginator]);
 

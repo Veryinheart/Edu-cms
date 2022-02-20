@@ -4,25 +4,38 @@ import axios, { AxiosResponse } from 'axios';
 import { AES } from 'crypto-js';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { API_URL, QueryPath } from '../../utils/constants/api';
+import { QueryPath } from '../../utils/constants/api';
 import { ValidateMessages } from '../../utils/constants/messages';
 import Storage from '../../utils/service/storage';
 import { StyledLoginTitle } from './index.style';
 import { LoginFormValues, Role } from './types';
+import storage from '../../utils/service/storage';
+import { API_URL } from '../../utils/service/apiConfig';
 
 const Login: React.FC = () => {
   const router = useRouter();
 
+  useEffect(() => {
+    if (storage?.userInfo) {
+      router.push(`/dashboard/${storage.userInfo.role}`);
+    }
+  }, [router]);
+
   const login = async ({ password, ...rest }: LoginFormValues) => {
     //login request
+
+    console.log(AES.encrypt(password, 'cms').toString());
+
     try {
       const res: AxiosResponse = await axios.post(`${API_URL}/${QueryPath.login}`, {
         password: AES.encrypt(password, 'cms').toString(),
         ...rest,
       });
 
+      console.log(res);
+      console.log(res.data);
       Storage.setUserInfo(res?.data.data);
       router.push('/dashboard/manager/students');
     } catch (err) {

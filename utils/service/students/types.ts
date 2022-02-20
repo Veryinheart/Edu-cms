@@ -9,6 +9,12 @@ export interface Student<T = CourseType> {
   type: { id: number; name: string } | null;
 }
 
+export interface StudentList {
+  paginator: { page: number; limit: number };
+  students: Student[];
+  total: number;
+}
+
 export interface CourseType {
   id: number;
   courseId: number;
@@ -22,6 +28,7 @@ export interface AddStudentRequest {
   type: number;
 }
 
+export type AddStudentResponse = Student;
 export interface UpdateStudentRequest extends AddStudentRequest {
   id: number;
 }
@@ -41,6 +48,7 @@ export interface StudentProfile {
   memberStartAt: string;
   memberEndAt: string;
   description: string;
+  profileId: number;
 }
 
 export interface StudentWithProfile extends Student<CourseType>, StudentProfile {}

@@ -5,14 +5,16 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import axios, { AxiosResponse } from 'axios';
 
-import { API_URL, QueryPath } from '../utils/constants/api';
+import { QueryPath } from '../utils/constants/api';
 import Storage from '../utils/service/storage';
+import { API_URL } from '../utils/service/apiConfig';
 function Logout() {
   const router = useRouter();
   const token = Storage.token;
   // const { token } = JSON.parse(localStorage.getItem('cms') || '');
 
   const logout = async () => {
+    console.log(`${API_URL}/${QueryPath.logout}`);
     try {
       const response: AxiosResponse = await axios.post(
         `${API_URL}/${QueryPath.logout}`,
@@ -26,6 +28,7 @@ function Logout() {
         router.push('/login');
       }
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }

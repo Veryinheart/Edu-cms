@@ -1,8 +1,15 @@
-import ApiClient from './apiClient';
-import { ApiConfiguration } from './apiConfig';
-import Storage from './storage';
+import { studentService } from './request';
 
-const studentApiConfig = new ApiConfiguration();
-studentApiConfig.token = Storage.token;
+const updateStudentRequest = async () => {
+  const res = await studentService.UpdateStudent({
+    'name': '11212121',
+    'email': 'string@ewas.com',
+    'country': 'China',
+    'type': 1,
+    'id': 777,
+  });
 
-const studentApiClient = new ApiClient(new ApiClient(studentApiConfig));
+  console.log(res);
+};
+
+updateStudentRequest();

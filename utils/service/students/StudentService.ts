@@ -1,13 +1,21 @@
-import { QueryPath } from './../../constants/api';
+import { QueryPath } from '../../constants/api';
 import { IApiClient } from '../apiClient';
 import { API_URL, IResponse } from '../apiConfig';
-import { Student, AddStudentRequest, UpdateStudentRequest, StudentWithProfile } from './types';
+import {
+  Student,
+  AddStudentRequest,
+  UpdateStudentRequest,
+  StudentWithProfile,
+  StudentList,
+  AddStudentResponse,
+} from './types';
 
 export interface IStudentApiClient {
-  findStudents(page: number, limit: number): Promise<IResponse<Student[]>> | undefined;
-  findStudentById(id: number): Promise<IResponse<StudentWithProfile>> | undefined;
-  AddStudent(param: AddStudentRequest): Promise<boolean>;
-  UpdateStudent(param: UpdateStudentRequest): Promise<IResponse<Student>>;
+  findStudents(page: number, limit: number): Promise<IResponse<StudentList> | undefined>;
+  findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined>;
+  addStudent(param: AddStudentRequest): Promise<IResponse<AddStudentResponse> | undefined>;
+  updateStudent(param: UpdateStudentRequest): Promise<IResponse<Student> | undefined>;
+  deleteStudent(id: number): Promise<IResponse<boolean> | undefined>;
 }
 
 export class StudentApiClient implements IStudentApiClient {
@@ -19,41 +27,43 @@ export class StudentApiClient implements IStudentApiClient {
     this.studentApiClient = studentApiClient;
   }
 
-  async findStudents(page: number, limit: number): Promise<IResponse<Student[]>> {
+  async findStudents(page: number, limit: number): Promise<IResponse<StudentList> | undefined> {
     try {
-      const response = await this.studentApiClient.get(
+      return await this.studentApiClient.get(
         `${this.apiBase}/${QueryPath.students}?page=${page}&limit=${limit}`
       );
-
-      return response;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async findStudentById(id: number): Promise<IResponse<StudentWithProfile>> {
+  async findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined> {
     try {
-      const response = await this.studentApiClient.get(
-        `${this.apiBase}/${QueryPath.students}/${id}`
-      );
-      return response.msg === 'success' ? response : undefined;
+      return await this.studentApiClient.get(`${this.apiBase}/${QueryPath.students}/${id}`);
     } catch (error) {
       console.log(error);
     }
   }
 
-  async AddStudent(param: AddStudentRequest): Promise<boolean> {
+  async addStudent(param: AddStudentRequest): Promise<IResponse<AddStudentResponse> | undefined> {
     try {
-      await this.studentApiClient.post(`${this.apiBase}/${QueryPath.students}`, param);
-      return true;
+      return await this.studentApiClient.post(`${this.apiBase}/${QueryPath.students}`, param);
     } catch (error) {
       throw error;
     }
   }
 
-  async UpdateStudent(param: UpdateStudentRequest): Promise<IResponse<Student>> | undefined {
+  async updateStudent(param: UpdateStudentRequest): Promise<IResponse<Student> | undefined> {
     try {
       return this.studentApiClient.put(`${this.apiBase}/${QueryPath.students}`, param);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteStudent(id: number): Promise<IResponse<boolean> | undefined> {
+    try {
+      return this.studentApiClient.delete(`${this.apiBase}/${QueryPath.students}/${id}`);
     } catch (error) {
       console.log(error);
     }
@@ -67,11 +77,22 @@ export class StudentService {
     this.studentApiClient = studentApiClient;
   }
 
-  async findStudents(page: number, limit: number): Promise<IResponse<Student[]>> | undefined {
+  async findStudents(page: number, limit: number): Promise<IResponse<StudentList> | undefined> {
     return this.studentApiClient.findStudents(page, limit);
   }
 
-  async findStudentById(id: number): Promise<IResponse<StudentWithProfile>> | undefined {
+  async findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined> {
     return this.studentApiClient.findStudentById(id);
+  }
+
+  async AddStudent(param: AddStudentRequest): Promise<IResponse<AddStudentResponse> | undefined> {
+    return this.studentApiClient.addStudent(param);
+  }
+  async UpdateStudent(param: UpdateStudentRequest): Promise<IResponse<Student> | undefined> {
+    return this.studentApiClient.updateStudent(param);
+  }
+
+  async deleteStudent(id: number): Promise<IResponse<boolean> | undefined> {
+    return this.studentApiClient.deleteStudent(id);
   }
 }

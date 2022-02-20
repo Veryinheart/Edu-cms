@@ -1,5 +1,5 @@
 import { Button, Form, Input, message, Select } from 'antd';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import React, { useEffect } from 'react';
 import { ModalFormSubmit } from '../../pages/dashboard/manager/students/index.style';
 import {
@@ -7,10 +7,9 @@ import {
   Student,
   UpdateStudentRequest,
 } from '../../pages/dashboard/manager/students/types';
-import { QueryPath } from '../../utils/constants/api';
 import { businessAreas } from '../../utils/constants/common';
 import { ValidateMessages } from '../../utils/constants/messages';
-import { axiosWithToken } from '../../utils/service/apiConfig';
+import { studentService } from '../../utils/service/request';
 
 interface IProps {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,10 +25,6 @@ function StudentForm(props: IProps) {
   const [form] = Form.useForm();
   const { EditingStudent, setIsModalVisible, fetchData } = props;
 
-  console.log(EditingStudent);
-  // if (!isModalVisible) {
-  //   form.resetFields();
-  // }
   useEffect(() => {
     form.setFieldsValue({ ...EditingStudent.student, type: EditingStudent?.student?.type?.id });
 
@@ -40,10 +35,11 @@ function StudentForm(props: IProps) {
 
   const handleEditStudent = async (param: UpdateStudentRequest) => {
     try {
-      const res: AxiosResponse = await axiosWithToken.put(`${QueryPath.students}`, {
+      const res = await studentService.UpdateStudent({
         ...param,
         id: EditingStudent?.student?.id as number,
       });
+
       if (res) {
         form.resetFields();
         setIsModalVisible(false);
@@ -59,9 +55,10 @@ function StudentForm(props: IProps) {
 
   const handleAddStudent = async (param: AddStudentRequest) => {
     try {
-      const res: AxiosResponse = await axiosWithToken.post(`${QueryPath.students}`, param);
-      if (res && res.data.code === 201 && res.data.msg === 'success') {
-        console.log(res.data);
+      // const res: AxiosResponse = await axiosWithToken.post(`${QueryPath.students}`, param);
+      const res = await studentService.AddStudent(param);
+
+      if (res && res?.code === 201 && res?.msg === 'success') {
         form.resetFields();
         setIsModalVisible(false);
         message.success('successfully added student information');
@@ -81,6 +78,7 @@ function StudentForm(props: IProps) {
       wrapperCol={{ offset: 1 }}
       validateMessages={ValidateMessages}
       onFinish={(param) => {
+        console.log(param);
         EditingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
       }}
     >

@@ -1,24 +1,22 @@
-import React, { useCallback, useState } from 'react';
-import DashboardLayout from '../../../../components/layout/DashboardLayout';
-import { useEffect } from 'react';
-import { axiosWithToken } from '../../../../utils/service/apiConfig';
-import { QueryPath } from '../../../../utils/constants/api';
-import { useRouter } from 'next/router';
-import { BaseType, CourseType, StudentResponse } from './types';
 import { Avatar, Card, Col, Layout, message, Row, Table, Tabs, Tag } from 'antd';
-import { H3 } from './index.style';
-import Link from 'next/link';
 import { ColumnType } from 'antd/lib/table';
-import storage from '../../../../utils/service/storage';
-import { programLanguageColors } from '../../../../utils/constants/common';
 import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
+import DashboardLayout from '../../../../components/layout/DashboardLayout';
+import { programLanguageColors } from '../../../../utils/constants/common';
+import { studentService } from '../../../../utils/service/request';
+import storage from '../../../../utils/service/storage';
+import { H3 } from './index.style';
+import { BaseType, CourseType, StudentResponse } from './types';
 
 function Page() {
   const router = useRouter();
   const [data, setData] = useState<StudentResponse>();
-  const [courses, setCourses] = useState<CourseType[]>([]);
-  const [info, setInfo] = useState<{ label: string; value: string | number }[]>([]);
-  const [about, setAbout] = useState<{ label: string; value: string | number }[]>([]);
+  const [courses, setCourses] = useState<CourseType[]>([] || undefined);
+  const [info, setInfo] = useState<{ label: string; value: string | number }[]>([] || undefined);
+  const [about, setAbout] = useState<{ label: string; value: string | number }[]>([] || undefined);
   // console.log(router);
 
   const columns: ColumnType<CourseType>[] = [
@@ -47,32 +45,35 @@ function Page() {
 
   const fetchStudentDetail = useCallback(async () => {
     try {
-      const res = await axiosWithToken.get(`${QueryPath.students}/${router.query.id}`);
-      console.log(res.data.data);
+      // const res = await axiosWithToken.get(`${QueryPath.students}/${router.query.id}`);
+      const res = await studentService.findStudentById(router.query.id);
+      // console.log(parseInt(router.query.id));
+      console.log(res);
+      console.log(res?.data);
 
       const info = [
-        { label: 'Name', value: res.data.data.name },
-        { label: 'Age', value: res.data.data.age },
-        { label: 'Email', value: res.data.data.email },
-        { label: 'Phone', value: res.data.data.phone },
+        { label: 'Name', value: res?.data?.name },
+        { label: 'Age', value: res?.data?.age },
+        { label: 'Email', value: res?.data?.email },
+        { label: 'Phone', value: res?.data?.phone },
       ];
       const about = [
-        { label: 'Eduction', value: res.data.data.education },
-        { label: 'Area', value: res.data.data.country },
-        { label: 'Gender', value: res.data.data.gender === 1 ? 'Male' : 'Female' },
+        { label: 'Eduction', value: res?.data?.education },
+        { label: 'Area', value: res?.data?.country },
+        { label: 'Gender', value: res?.data?.gender === 1 ? 'Male' : 'Female' },
         {
           label: 'Member Period',
-          value: res.data.data.memberStartAt + ' - ' + res.data.data.memberEndAt,
+          value: res?.data?.memberStartAt + ' - ' + res?.data?.memberEndAt,
         },
-        { label: 'Type', value: res.data.data.type.name },
-        { label: 'Create Time', value: res.data.data.ctime },
-        { label: 'Update Time', value: res.data.data.updateAt },
+        { label: 'Type', value: res?.data?.type?.name },
+        { label: 'Create Time', value: res?.data?.createdAt },
+        { label: 'Update Time', value: res?.data?.updatedAt },
       ];
 
-      setInfo(info);
-      setCourses(res.data.data.courses);
-      setAbout(about);
-      setData(res.data.data);
+      setInfo(info as { label: string; value: string | number }[]);
+      setCourses(res?.data?.courses as CourseType[]);
+      setAbout(about as { label: string; value: string | number }[]);
+      setData(res?.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);

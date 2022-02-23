@@ -1,42 +1,34 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, message, Radio, Row } from 'antd';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { AES } from 'crypto-js';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import Header from '../../components/Header';
-import { QueryPath } from '../../utils/constants/api';
 import { ValidateMessages } from '../../utils/constants/messages';
-import Storage from '../../utils/service/storage';
+import { setUserInfo, userInfo } from '../../utils/service/storage';
+import { userLogin } from '../../utils/service/user/userService';
 import { StyledLoginTitle } from './index.style';
 import { LoginFormValues, Role } from './types';
-import storage from '../../utils/service/storage';
-import { API_URL } from '../../utils/service/apiConfig';
 
 const Login: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (storage?.userInfo) {
-      router.push(`/dashboard/${storage.userInfo.role}`);
+    const user = userInfo();
+    if (user) {
+      router.push(`/dashboard/${user.role}`);
     }
   }, [router]);
 
   const login = async ({ password, ...rest }: LoginFormValues) => {
-    //login request
-
-    console.log(AES.encrypt(password, 'cms').toString());
-
     try {
-      const res: AxiosResponse = await axios.post(`${API_URL}/${QueryPath.login}`, {
+      const res = await userLogin({
         password: AES.encrypt(password, 'cms').toString(),
         ...rest,
       });
-
-      console.log(res);
-      console.log(res.data);
-      Storage.setUserInfo(res?.data.data);
+      setUserInfo(res?.data);
       router.push('/dashboard/manager/students');
     } catch (err) {
       if (axios.isAxiosError(err)) {

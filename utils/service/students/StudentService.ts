@@ -1,6 +1,6 @@
-import { QueryPath } from './../constants/api';
-import { deleteRequest, getParamRequest, getUrlRequest, postRequest, putRequest } from './1request';
-import { IResponse } from './apiConfig';
+import { QueryPath } from '../../constants/api';
+import { deleteRequest, getParamRequest, getUrlRequest, postRequest, putRequest } from '../request';
+import { IResponse } from '../apiConfig';
 
 interface getStudentRequest {
   page: number;
@@ -74,13 +74,14 @@ export interface BaseType {
 
 const path = QueryPath.students;
 
-//success
 export function getStudents(req: getStudentRequest): Promise<IResponse<StudentList> | undefined> {
   // console.log(req);
   return getParamRequest<IResponse<StudentList>>(path, req);
 }
 
-export function findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined> {
+export function findStudentById(
+  id: string | string[] | undefined
+): Promise<IResponse<StudentWithProfile> | undefined> {
   return getUrlRequest<IResponse<StudentWithProfile> | undefined>(path, id);
 }
 
@@ -94,17 +95,14 @@ export function findStudentByName(
 export function AddStudent(
   param: AddStudentRequest
 ): Promise<IResponse<AddStudentResponse> | undefined> {
-  console.log(param);
   return postRequest<IResponse<AddStudentResponse> | undefined>(path, param);
 }
 export function UpdateStudent(
   param: UpdateStudentRequest
 ): Promise<IResponse<Student> | undefined> {
-  console.log(param);
   return putRequest<IResponse<Student>>(path, param);
 }
 
-//success
 export function deleteStudent(id: number): Promise<IResponse<boolean>> {
   return deleteRequest<IResponse<boolean>>(path, id);
 }

@@ -1,7 +1,7 @@
 export interface LoginResponse {
   token: string;
-  role: string;
-  userId: number;
+  role: Role;
+  userId: string;
 }
 export enum Role {
   student = 'student',

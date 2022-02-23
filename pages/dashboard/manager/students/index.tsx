@@ -13,7 +13,7 @@ import {
   deleteStudent,
   findStudentByName,
   getStudents,
-} from '../../../../utils/service/1studentService';
+} from '../../../../utils/service/students/studentService';
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
 
@@ -173,6 +173,8 @@ function StudentList() {
               const res = await findStudentByName({
                 ...paginator,
                 query: event.target.value,
+                page: 1,
+                limit: 20,
               });
 
               if (res) {

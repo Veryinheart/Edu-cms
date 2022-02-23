@@ -1,39 +1,36 @@
 import { LoginResponse, Role } from '../../pages/login/types';
 
-export type UserInfo = LoginResponse | null;
+export type UserInfo = LoginResponse | null | undefined;
 
-export class Storage {
-  private key = 'cms';
+const key = 'cms';
 
-  setUserInfo(info: UserInfo): void {
-    localStorage.setItem(this.key, JSON.stringify(info));
-  }
+export function setUserInfo(info: UserInfo): void {
+  localStorage.setItem(key, JSON.stringify(info));
+}
 
-  get userInfo(): UserInfo {
-    try {
-      return JSON.parse(localStorage.getItem(this.key) as string) as UserInfo;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  get token(): string | undefined {
-    return this.userInfo?.token;
-  }
-
-  get role(): Role | undefined {
-    return this.userInfo?.role;
-  }
-
-  get userId(): number | undefined {
-    return +this.userInfo!.userId;
-  }
-
-  deleteUserInfo(): void {
-    localStorage.removeItem(this.key);
+export function userInfo(): UserInfo {
+  try {
+    return JSON.parse(localStorage.getItem(key) as string) as UserInfo;
+  } catch (error) {
+    return null;
   }
 }
 
-export const storage = new Storage();
+export function getToken(): string | undefined {
+  const user = userInfo();
+  return user?.token;
+}
 
-export default storage;
+export function getRole(): Role | undefined {
+  const user = userInfo();
+  return user?.role;
+}
+
+export function getUserId(): number | undefined {
+  const user = userInfo();
+  return +user!.userId;
+}
+
+export function deleteUserInfo(): void {
+  localStorage.removeItem(key);
+}

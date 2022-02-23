@@ -1,6 +1,6 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 import { API_URL } from './apiConfig';
-import Storage from './storage';
+import { getToken } from './storage';
 
 // enum StatusCode {
 //   Unauthorized = 401,
@@ -17,7 +17,7 @@ const instance = Axios.create({
 instance.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     try {
-      const token = Storage.token;
+      const token = getToken();
       if (token !== null && config.headers !== undefined) {
         config.headers.Authorization = `Bearer ${token}`;
       }

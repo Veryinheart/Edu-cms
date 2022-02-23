@@ -9,7 +9,7 @@ import {
 } from '../../pages/dashboard/manager/students/types';
 import { businessAreas } from '../../utils/constants/common';
 import { ValidateMessages } from '../../utils/constants/messages';
-import { AddStudent, UpdateStudent } from '../../utils/service/1studentService';
+import { AddStudent, UpdateStudent } from '../../utils/service/students/studentService';
 
 interface IProps {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;

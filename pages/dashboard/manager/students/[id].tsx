@@ -6,8 +6,8 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { programLanguageColors } from '../../../../utils/constants/common';
-import { findStudentById } from '../../../../utils/service/1studentService';
-import storage from '../../../../utils/service/storage';
+import { findStudentById } from '../../../../utils/service/students/studentService';
+import { userInfo } from '../../../../utils/service/storage';
 import { H3 } from './index.style';
 import { BaseType, CourseType, StudentResponse } from './types';
 
@@ -18,7 +18,7 @@ function Page() {
   const [info, setInfo] = useState<{ label: string; value: string | number }[]>([] || undefined);
   const [about, setAbout] = useState<{ label: string; value: string | number }[]>([] || undefined);
   // console.log(router);
-
+  const user = userInfo();
   const columns: ColumnType<CourseType>[] = [
     {
       title: 'No.',
@@ -29,7 +29,7 @@ function Page() {
       title: 'Name',
       dataIndex: 'name',
       render: (value, record) => (
-        <Link href={`/dashboard/${storage.role}/courses/${record.id}`}>{value}</Link>
+        <Link href={`/dashboard/${user?.role}/courses/${record.id}`}>{value}</Link>
       ),
     },
     {
@@ -48,9 +48,6 @@ function Page() {
       // console.log(typeof router.query.id);
       // const res = await axiosWithToken.get(`${QueryPath.students}/${router.query.id}`);
       const res = await findStudentById(router?.query?.id);
-      // console.log(parseInt(router.query.id));
-      console.log(res);
-      console.log(res?.data);
 
       const info = [
         { label: 'Name', value: res?.data?.name },

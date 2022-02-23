@@ -1,30 +1,20 @@
 import { LogoutOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
-import React from 'react';
-// import { StyledLogoutContent } from '../pages/dashboard/index.style';
+import axios from 'axios';
 import { useRouter } from 'next/router';
-import axios, { AxiosResponse } from 'axios';
+import React from 'react';
+import { deleteUserInfo } from '../utils/service/storage';
+import { userLogout } from '../utils/service/user/userService';
 
-import { QueryPath } from '../utils/constants/api';
-import Storage from '../utils/service/storage';
-import { API_URL } from '../utils/service/apiConfig';
 function Logout() {
   const router = useRouter();
-  const token = Storage.token;
-  // const { token } = JSON.parse(localStorage.getItem('cms') || '');
-
   const logout = async () => {
-    console.log(`${API_URL}/${QueryPath.logout}`);
     try {
-      const response: AxiosResponse = await axios.post(
-        `${API_URL}/${QueryPath.logout}`,
-        {},
-        {
-          headers: { 'Authorization': `Bearer ${token}` },
-        }
-      );
-      if (response) {
-        Storage.deleteUserInfo;
+      const res = await userLogout();
+      // console.log(response);
+      if (res?.code === 201 && res?.msg === 'success') {
+        // Storage.deleteUserInfo;
+        deleteUserInfo();
         router.push('/login');
       }
     } catch (error) {

@@ -1,4 +1,4 @@
-import myAxios from './1apiClient';
+import myAxios from './apiClient';
 
 export function getParamRequest<T>(path: string, params: unknown) {
   return new Promise<T>((resolve, reject) => {
@@ -26,7 +26,7 @@ export function getUrlRequest<T>(path: string, params: unknown) {
   });
 }
 
-export function postRequest<T>(path: string, params: unknown) {
+export function postRequest<T>(path: string, params?: unknown) {
   return new Promise<T>((resolve, reject) => {
     myAxios
       .post(path, params)

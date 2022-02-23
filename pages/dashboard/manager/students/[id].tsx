@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { programLanguageColors } from '../../../../utils/constants/common';
-import { studentService } from '../../../../utils/service/request';
+import { findStudentById } from '../../../../utils/service/1studentService';
 import storage from '../../../../utils/service/storage';
 import { H3 } from './index.style';
 import { BaseType, CourseType, StudentResponse } from './types';
@@ -45,8 +45,9 @@ function Page() {
 
   const fetchStudentDetail = useCallback(async () => {
     try {
+      // console.log(typeof router.query.id);
       // const res = await axiosWithToken.get(`${QueryPath.students}/${router.query.id}`);
-      const res = await studentService.findStudentById(router.query.id);
+      const res = await findStudentById(router?.query?.id);
       // console.log(parseInt(router.query.id));
       console.log(res);
       console.log(res?.data);

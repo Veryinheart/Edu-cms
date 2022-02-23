@@ -1,84 +1,41 @@
-import Axios, { AxiosInstance } from 'axios';
-import { RequestConfig, ApiConfiguration, API_URL } from './apiConfig';
+import Axios, { AxiosRequestConfig } from 'axios';
+import { API_URL } from './apiConfig';
+import Storage from './storage';
 
-export interface IApiClient {
-  post<TRequest, TResponse>(
-    path: string,
-    object: TRequest,
-    config?: RequestConfig
-  ): Promise<TResponse>;
+// enum StatusCode {
+//   Unauthorized = 401,
+//   Forbidden = 403,
+//   TooManyRequests = 429,
+//   InternalServerError = 500,
+// }
 
-  get<TResponse>(path: string): Promise<TResponse>;
-  put<TRequest, TResponse>(path: string, object: TRequest): Promise<TResponse>;
-  delete<TResponse>(path: string): Promise<TResponse>;
-}
+const instance = Axios.create({
+  baseURL: API_URL,
+  timeout: 10 * 1000,
+});
 
-export default class ApiClient implements IApiClient {
-  private client: AxiosInstance;
-
-  protected createAxiosClient(apiConfiguration: ApiConfiguration): AxiosInstance {
-    return Axios.create({
-      baseURL: API_URL,
-      // responseType: 'json' as const,
-      headers: {
-        ...(apiConfiguration.token && {
-          Authorization: `Bearer ${apiConfiguration.token}`,
-        }),
-      },
-      timeout: 10 * 1000,
-    });
-  }
-
-  constructor(apiConfiguration: ApiConfiguration) {
-    this.client = this.createAxiosClient(apiConfiguration);
-  }
-
-  async post<TRequest, TResponse>(
-    path: string,
-    param: TRequest,
-    config?: RequestConfig
-  ): Promise<TResponse> {
+instance.interceptors.request.use(
+  (config: AxiosRequestConfig) => {
     try {
-      const response = config
-        ? await this.client.post<TResponse>(path, param, config)
-        : await this.client.post<TResponse>(path, param);
-      return response.data;
-    } catch (error) {
-      // handleServiceError(error);
+      const token = Storage.token;
+      if (token !== null && config.headers !== undefined) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    } catch (error: unknown) {
+      console.log(error);
     }
-    return {} as TResponse;
-    // throw new Error('Method not implemented.');
+  },
+  (error) => {
+    return Promise.reject(error.message);
   }
-  async get<TResponse>(path: string): Promise<TResponse> {
-    try {
-      const response = await this.client.get<TResponse>(path);
-      return response.data;
-    } catch (error) {
-      // handleServiceError(error);
-    }
-    return {} as TResponse;
-  }
+);
 
-  // throw new Error('Method not implemented.');
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    return Promise.reject(error.message);
+  }
+);
 
-  async put<TRequest, TResponse>(path: string, param: TRequest): Promise<TResponse> {
-    try {
-      const response = await this.client.put<TResponse>(path, param);
-      return response.data;
-    } catch (error) {
-      // handleServiceError(error);
-    }
-    return {} as TResponse;
-    // throw new Error('Method not implemented.');
-  }
-  async delete<TResponse>(path: string): Promise<TResponse> {
-    try {
-      const response = await this.client.get<TResponse>(path);
-      return response.data;
-    } catch (error) {
-      // handleServiceError(error);
-    }
-    return {} as TResponse;
-  }
-  // throw new Error('Method not implemented.');
-}
+export default instance;

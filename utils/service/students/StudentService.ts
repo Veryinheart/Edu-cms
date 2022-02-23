@@ -1,98 +1,110 @@
-import { QueryPath } from '../../constants/api';
-import { IApiClient } from '../apiClient';
-import { API_URL, IResponse } from '../apiConfig';
-import {
-  Student,
-  AddStudentRequest,
-  UpdateStudentRequest,
-  StudentWithProfile,
-  StudentList,
-  AddStudentResponse,
-} from './types';
+import { QueryPath } from './../constants/api';
+import { deleteRequest, getParamRequest, getUrlRequest, postRequest, putRequest } from './1request';
+import { IResponse } from './apiConfig';
 
-export interface IStudentApiClient {
-  findStudents(page: number, limit: number): Promise<IResponse<StudentList> | undefined>;
-  findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined>;
-  addStudent(param: AddStudentRequest): Promise<IResponse<AddStudentResponse> | undefined>;
-  updateStudent(param: UpdateStudentRequest): Promise<IResponse<Student> | undefined>;
-  deleteStudent(id: number): Promise<IResponse<boolean> | undefined>;
+interface getStudentRequest {
+  page: number;
+  limit: number;
+  query?: string;
+  userId?: number;
 }
 
-export class StudentApiClient implements IStudentApiClient {
-  apiBase: string;
-  studentApiClient: IApiClient;
-
-  constructor(studentApiClient: IApiClient) {
-    this.apiBase = API_URL;
-    this.studentApiClient = studentApiClient;
-  }
-
-  async findStudents(page: number, limit: number): Promise<IResponse<StudentList> | undefined> {
-    try {
-      return await this.studentApiClient.get(
-        `${this.apiBase}/${QueryPath.students}?page=${page}&limit=${limit}`
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined> {
-    try {
-      return await this.studentApiClient.get(`${this.apiBase}/${QueryPath.students}/${id}`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async addStudent(param: AddStudentRequest): Promise<IResponse<AddStudentResponse> | undefined> {
-    try {
-      return await this.studentApiClient.post(`${this.apiBase}/${QueryPath.students}`, param);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async updateStudent(param: UpdateStudentRequest): Promise<IResponse<Student> | undefined> {
-    try {
-      return this.studentApiClient.put(`${this.apiBase}/${QueryPath.students}`, param);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async deleteStudent(id: number): Promise<IResponse<boolean> | undefined> {
-    try {
-      return this.studentApiClient.delete(`${this.apiBase}/${QueryPath.students}/${id}`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+export interface Student<T = CourseType> {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+  country: string;
+  email: string;
+  courses: T[];
+  type: { id: number; name: string } | null;
 }
 
-export class StudentService {
-  studentApiClient: IStudentApiClient;
+export interface StudentList {
+  paginator: { page: number; limit: number };
+  students: Student[];
+  total: number;
+}
 
-  constructor(studentApiClient: IStudentApiClient) {
-    this.studentApiClient = studentApiClient;
-  }
+export interface CourseType {
+  id: number;
+  courseId: number;
+  name: string;
+}
 
-  async findStudents(page: number, limit: number): Promise<IResponse<StudentList> | undefined> {
-    return this.studentApiClient.findStudents(page, limit);
-  }
+export interface AddStudentRequest {
+  name: string;
+  email: string;
+  country: string;
+  type: number;
+}
 
-  async findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined> {
-    return this.studentApiClient.findStudentById(id);
-  }
+export type AddStudentResponse = Student;
 
-  async AddStudent(param: AddStudentRequest): Promise<IResponse<AddStudentResponse> | undefined> {
-    return this.studentApiClient.addStudent(param);
-  }
-  async UpdateStudent(param: UpdateStudentRequest): Promise<IResponse<Student> | undefined> {
-    return this.studentApiClient.updateStudent(param);
-  }
+export interface UpdateStudentRequest extends AddStudentRequest {
+  id: number;
+}
 
-  async deleteStudent(id: number): Promise<IResponse<boolean> | undefined> {
-    return this.studentApiClient.deleteStudent(id);
-  }
+export interface StudentProfile {
+  id: number;
+  name: string;
+  country: string;
+  email: string;
+  address: string;
+  phone: number;
+  gender: number;
+  education: string;
+  age: number;
+  interest: string[];
+  avatar: string;
+  memberStartAt: string;
+  memberEndAt: string;
+  description: string;
+  profileId: number;
+}
+
+export interface StudentWithProfile extends Student<CourseType>, StudentProfile {}
+
+export type StudentResponse = StudentWithProfile;
+
+export interface BaseType {
+  id: number;
+  name: string;
+}
+
+const path = QueryPath.students;
+
+//success
+export function getStudents(req: getStudentRequest): Promise<IResponse<StudentList> | undefined> {
+  // console.log(req);
+  return getParamRequest<IResponse<StudentList>>(path, req);
+}
+
+export function findStudentById(id: string): Promise<IResponse<StudentWithProfile> | undefined> {
+  return getUrlRequest<IResponse<StudentWithProfile> | undefined>(path, id);
+}
+
+export function findStudentByName(
+  param: getStudentRequest
+): Promise<IResponse<StudentList> | undefined> {
+  return getParamRequest<IResponse<StudentList> | undefined>(path, param);
+}
+// 类型错误 TS 查阅类型文档 找问题！
+
+export function AddStudent(
+  param: AddStudentRequest
+): Promise<IResponse<AddStudentResponse> | undefined> {
+  console.log(param);
+  return postRequest<IResponse<AddStudentResponse> | undefined>(path, param);
+}
+export function UpdateStudent(
+  param: UpdateStudentRequest
+): Promise<IResponse<Student> | undefined> {
+  console.log(param);
+  return putRequest<IResponse<Student>>(path, param);
+}
+
+//success
+export function deleteStudent(id: number): Promise<IResponse<boolean>> {
+  return deleteRequest<IResponse<boolean>>(path, id);
 }

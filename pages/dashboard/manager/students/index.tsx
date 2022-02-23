@@ -2,16 +2,18 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, message, Modal, Popconfirm, Space, Table } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import TextLink from 'antd/lib/typography/Link';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import _ from 'lodash';
 import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
-import StudentForm from '../../../../components/students/AddEditStudentForm';
-import { QueryPath } from '../../../../utils/constants/api';
+import StudentForm from '../../../../components/students/StudentForm';
 import { businessAreas } from '../../../../utils/constants/common';
-import { axiosWithToken } from '../../../../utils/service/apiConfig';
-import { studentService } from '../../../../utils/service/request';
+import {
+  deleteStudent,
+  findStudentByName,
+  getStudents,
+} from '../../../../utils/service/1studentService';
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
 
@@ -118,7 +120,7 @@ function StudentList() {
               try {
                 console.log(record.id);
                 // const res = await axiosWithToken.delete(`${QueryPath.students}/${record.id}`);
-                const res = await studentService.deleteStudent(record.id);
+                const res = await deleteStudent(record.id);
                 if (res && res?.code === 200 && res?.msg === 'success') {
                   fetchData();
                   message.success('successfully deleted student');
@@ -141,11 +143,13 @@ function StudentList() {
     // const res: AxiosResponse = await axiosWithToken.get(
     //   `${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`
     // );
-    const res = await studentService.findStudents(paginator.page, paginator.limit);
+    // const res = await studentService.findStudents(paginator.page, paginator.limit);
+
+    const res = await getStudents(paginator);
+
+    // console.log(res);
     console.log(res);
     if (res) {
-      // console.log(res.data.data.students);
-      // setData(res?.data?.students);
       setTotal(res?.data?.total as number);
       setDataFiltered(res?.data?.students);
     }
@@ -166,11 +170,13 @@ function StudentList() {
           allowClear
           onChange={_.debounce(async (event) => {
             try {
-              const res: AxiosResponse = await axiosWithToken.get(
-                `${QueryPath.students}/?query=${event.target.value}&page=1&limit=20`
-              );
+              const res = await findStudentByName({
+                ...paginator,
+                query: event.target.value,
+              });
+
               if (res) {
-                setDataFiltered(res.data.data.students);
+                setDataFiltered(res?.data?.students);
               }
             } catch (error) {
               if (axios.isAxiosError(error)) {

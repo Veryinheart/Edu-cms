@@ -9,7 +9,7 @@ import {
 } from '../../pages/dashboard/manager/students/types';
 import { businessAreas } from '../../utils/constants/common';
 import { ValidateMessages } from '../../utils/constants/messages';
-import { studentService } from '../../utils/service/request';
+import { AddStudent, UpdateStudent } from '../../utils/service/1studentService';
 
 interface IProps {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,7 +35,8 @@ function StudentForm(props: IProps) {
 
   const handleEditStudent = async (param: UpdateStudentRequest) => {
     try {
-      const res = await studentService.UpdateStudent({
+      console.log(param);
+      const res = await UpdateStudent({
         ...param,
         id: EditingStudent?.student?.id as number,
       });
@@ -56,7 +57,7 @@ function StudentForm(props: IProps) {
   const handleAddStudent = async (param: AddStudentRequest) => {
     try {
       // const res: AxiosResponse = await axiosWithToken.post(`${QueryPath.students}`, param);
-      const res = await studentService.AddStudent(param);
+      const res = await AddStudent(param);
 
       if (res && res?.code === 201 && res?.msg === 'success') {
         form.resetFields();
@@ -99,7 +100,7 @@ function StudentForm(props: IProps) {
       </Form.Item>
       <Form.Item label="Student Type" name="type" rules={[{ required: true }]}>
         <Select>
-          <Select.Option value={0}>Developer</Select.Option>
+          <Select.Option value={2}>Developer</Select.Option>
           <Select.Option value={1}>Tester</Select.Option>
         </Select>
       </Form.Item>

@@ -17,11 +17,13 @@ import {
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
 
-function StudentList() {
+// function Page({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// const { students, total:initialTotal} = data;
+
+function Page({ total: tol, students: stu }: { total: number; students: Student[] }) {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
-  // const [data, setData] = useState<Student[]>([]);
-  const [total, setTotal] = useState(0);
-  const [dataFiltered, setDataFiltered] = useState<Student[] | undefined>([]);
+  const [total, setTotal] = useState(tol);
+  const [dataFiltered, setDataFiltered] = useState<Student[] | undefined>(stu);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [EditingStudent, setEditingStudent] = useState<{
     student: Student | null;
@@ -118,7 +120,7 @@ function StudentList() {
             title="Are you sure to delete?"
             onConfirm={async () => {
               try {
-                console.log(record.id);
+                // console.log(record.id);
                 // const res = await axiosWithToken.delete(`${QueryPath.students}/${record.id}`);
                 const res = await deleteStudent(record.id);
                 if (res && res?.code === 200 && res?.msg === 'success') {
@@ -140,15 +142,8 @@ function StudentList() {
   ];
 
   const fetchData = useCallback(async () => {
-    // const res: AxiosResponse = await axiosWithToken.get(
-    //   `${QueryPath.students}/?page=${paginator.page}&limit=${paginator.limit}`
-    // );
-    // const res = await studentService.findStudents(paginator.page, paginator.limit);
-
     const res = await getStudents(paginator);
-
     // console.log(res);
-    console.log(res);
     if (res) {
       setTotal(res?.data?.total as number);
       setDataFiltered(res?.data?.students);
@@ -223,4 +218,4 @@ function StudentList() {
   );
 }
 
-export default StudentList;
+export default Page;

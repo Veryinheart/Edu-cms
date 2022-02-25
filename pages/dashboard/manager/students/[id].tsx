@@ -6,8 +6,8 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { programLanguageColors } from '../../../../utils/constants/common';
-import { findStudentById } from '../../../../utils/service/students/studentService';
 import { userInfo } from '../../../../utils/service/storage';
+import { findStudentById } from '../../../../utils/service/students/studentService';
 import { H3 } from './index.style';
 import { BaseType, CourseType, StudentResponse } from './types';
 

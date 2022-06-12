@@ -11,14 +11,16 @@ function hano(n, a, b, c) {
 
 //2 fibonacci
 
-const cache = new Map();
-
+// global variable  注意全局变量
+// 注意 实际问题 解决的  MAP object 选择
 function fibonacci(n) {
   let result = null;
+  const cache = new Map();
 
   if (cache.has(n)) {
     return cache.get(n);
   }
+
   if (n < 2) {
     result = n;
   } else {
@@ -29,6 +31,7 @@ function fibonacci(n) {
   return result;
 }
 
+fibonacci();
 //3 deep_clone
 
 function deepClone(obj, hash = new WeakMap()) {

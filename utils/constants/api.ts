@@ -2,6 +2,8 @@ export enum QueryPath {
   login = 'login',
   logout = 'logout',
   students = 'students',
+  statistics = 'statistics',
+  overview = 'overview',
 }
 
 export enum ActionPath {

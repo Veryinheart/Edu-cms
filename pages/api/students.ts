@@ -13,7 +13,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 export async function getServerSideProps() {
   const paginator = { page: 1, limit: 20 };
   const res = await getStudents(paginator);
-  console.log(res);
 
   return {
     props: { total: res?.data?.total, students: res?.data?.students },

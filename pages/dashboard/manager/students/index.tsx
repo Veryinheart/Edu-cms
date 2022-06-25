@@ -17,10 +17,7 @@ import {
 import { FlexContainer, StyledSearch } from './index.style';
 import { CourseType, Student } from './types';
 
-// function Page({ data }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-// const { students, total:initialTotal} = data;
-
-function Page({ total: tol, students: stu }: { total: number; students: Student[] }) {
+function Students({ total: tol, students: stu }: { total: number; students: Student[] }) {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
   const [total, setTotal] = useState(tol);
   const [dataFiltered, setDataFiltered] = useState<Student[] | undefined>(stu);
@@ -218,4 +215,4 @@ function Page({ total: tol, students: stu }: { total: number; students: Student[
   );
 }
 
-export default Page;
+export default Students;

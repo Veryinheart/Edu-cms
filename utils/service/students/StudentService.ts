@@ -2,7 +2,7 @@ import { QueryPath } from '../../constants/api';
 import { deleteRequest, getParamRequest, getUrlRequest, postRequest, putRequest } from '../request';
 import { IResponse } from '../apiConfig';
 
-interface getStudentRequest {
+interface GetStudentRequest {
   page: number;
   limit: number;
   query?: string;
@@ -74,7 +74,7 @@ export interface BaseType {
 
 const path = QueryPath.students;
 
-export function getStudents(req: getStudentRequest): Promise<IResponse<StudentList> | undefined> {
+export function getStudents(req: GetStudentRequest): Promise<IResponse<StudentList> | undefined> {
   // console.log(req);
   return getParamRequest<IResponse<StudentList>>(path, req);
 }
@@ -86,11 +86,10 @@ export function findStudentById(
 }
 
 export function findStudentByName(
-  param: getStudentRequest
+  param: GetStudentRequest
 ): Promise<IResponse<StudentList> | undefined> {
   return getParamRequest<IResponse<StudentList> | undefined>(path, param);
 }
-// 类型错误 TS 查阅类型文档 找问题！
 
 export function AddStudent(
   param: AddStudentRequest

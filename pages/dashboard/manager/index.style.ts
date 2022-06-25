@@ -13,3 +13,15 @@ export const OverviewIconCol = styled(Col)`
     color: #999;
   }
 `;
+
+export const OverviewCol = styled(Col)`
+  color: #fff;
+  h3 {
+    color: #fff;
+  }
+  h2 {
+    color: #fff;
+    font-size: 32px;
+    margin-bottom: 0;
+  }
+`;

@@ -1,4 +1,4 @@
-import { Col } from 'antd';
+import { Col, Row } from 'antd';
 import styled from 'styled-components';
 
 export const OverviewIconCol = styled(Col)`
@@ -24,4 +24,9 @@ export const OverviewCol = styled(Col)`
     font-size: 32px;
     margin-bottom: 0;
   }
+`;
+
+export const StyledOverviewCardContainer = styled(Row)`
+  align: middle;
+  gutter: [24, 16];
 `;

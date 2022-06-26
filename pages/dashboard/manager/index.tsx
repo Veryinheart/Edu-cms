@@ -63,6 +63,7 @@ const Overview: React.FC = () => {
       <DashboardLayout>
         {overView && (
           <Row align="middle" gutter={[24, 16]}>
+            {/* // <StyledOverviewCardContainer> */}
             <Col span={8}>
               <StyledOverviewCard
                 style={{ background: '#1890ff' }}
@@ -88,6 +89,7 @@ const Overview: React.FC = () => {
                 style={{ background: '#ffaa16' }}
               />
             </Col>
+            {/* </StyledOverviewCardContainer> */}
           </Row>
         )}
         some table chart etc

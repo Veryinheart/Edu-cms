@@ -19,9 +19,9 @@ import { CourseType, Student } from './types';
 
 function Students({ total: tol, students: stu }: { total: number; students: Student[] }) {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
-  const [total, setTotal] = useState(tol);
+  const [total, setTotal] = useState<number>(tol);
   const [dataFiltered, setDataFiltered] = useState<Student[] | undefined>(stu);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [EditingStudent, setEditingStudent] = useState<{
     student: Student | null;
     edit: boolean;

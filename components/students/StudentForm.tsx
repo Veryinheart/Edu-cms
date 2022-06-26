@@ -35,7 +35,7 @@ function StudentForm(props: IProps) {
 
   const handleEditStudent = async (param: UpdateStudentRequest) => {
     try {
-      console.log(param);
+      // console.log(param);
       const res = await UpdateStudent({
         ...param,
         id: EditingStudent?.student?.id as number,

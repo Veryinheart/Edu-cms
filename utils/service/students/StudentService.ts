@@ -74,34 +74,36 @@ export interface BaseType {
 
 const path = QueryPath.students;
 
-export function getStudents(req: GetStudentRequest): Promise<IResponse<StudentList> | undefined> {
+export const getStudents = (
+  req: GetStudentRequest
+): Promise<IResponse<StudentList> | undefined> => {
   // console.log(req);
   return getParamRequest<IResponse<StudentList>>(path, req);
-}
+};
 
-export function findStudentById(
+export const findStudentById = (
   id: string | string[] | undefined
-): Promise<IResponse<StudentWithProfile> | undefined> {
+): Promise<IResponse<StudentWithProfile> | undefined> => {
   return getUrlRequest<IResponse<StudentWithProfile> | undefined>(path, id);
-}
+};
 
-export function findStudentByName(
+export const findStudentByName = (
   param: GetStudentRequest
-): Promise<IResponse<StudentList> | undefined> {
+): Promise<IResponse<StudentList> | undefined> => {
   return getParamRequest<IResponse<StudentList> | undefined>(path, param);
-}
+};
 
-export function AddStudent(
+export const addStudent = (
   param: AddStudentRequest
-): Promise<IResponse<AddStudentResponse> | undefined> {
+): Promise<IResponse<AddStudentResponse> | undefined> => {
   return postRequest<IResponse<AddStudentResponse> | undefined>(path, param);
-}
-export function UpdateStudent(
+};
+export const updateStudent = (
   param: UpdateStudentRequest
-): Promise<IResponse<Student> | undefined> {
+): Promise<IResponse<Student> | undefined> => {
   return putRequest<IResponse<Student>>(path, param);
-}
+};
 
-export function deleteStudent(id: number): Promise<IResponse<boolean>> {
+export const deleteStudent = (id: number): Promise<IResponse<boolean>> => {
   return deleteRequest<IResponse<boolean>>(path, id);
-}
+};

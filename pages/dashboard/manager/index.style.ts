@@ -1,17 +1,18 @@
-import { Col, Row } from 'antd';
+import { Col } from 'antd';
 import styled from 'styled-components';
 
 export const OverviewIconCol = styled(Col)`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 30px;
   .anticon {
     background: #fff;
     padding: 25px;
     border-radius: 50%;
     color: #999;
   }
+  padding-right: 10px;
 `;
 
 export const OverviewCol = styled(Col)`
@@ -26,7 +27,10 @@ export const OverviewCol = styled(Col)`
   }
 `;
 
-export const StyledOverviewCardContainer = styled(Row)`
-  align: middle;
-  gutter: [24, 16];
+export const StyledOverviewCardContainer = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const StyledGraphicContainer = styled.div`
+  display: flex;
 `;

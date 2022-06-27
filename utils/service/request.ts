@@ -1,6 +1,6 @@
 import myAxios from './apiClient';
 
-export function getParamRequest<T>(path: string, params: unknown) {
+export function getParamRequest<T>(path: string, params?: unknown) {
   return new Promise<T>((resolve, reject) => {
     myAxios
       .get(path, { params: params })
@@ -13,7 +13,20 @@ export function getParamRequest<T>(path: string, params: unknown) {
   });
 }
 
-export function getUrlRequest<T>(path: string, params: unknown) {
+export function getRequest<T>(path: string) {
+  return new Promise<T>((resolve, reject) => {
+    myAxios
+      .get(path)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function getUrlRequest<T>(path: string, params?: unknown) {
   return new Promise<T>((resolve, reject) => {
     myAxios
       .get(`${path}/${params}`)

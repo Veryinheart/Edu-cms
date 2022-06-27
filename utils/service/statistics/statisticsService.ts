@@ -6,6 +6,7 @@ import {
   StatisticsStudent,
   StatisticsTeacher,
   StatisticsCourse,
+  WorldMap,
 } from './types';
 
 const path = QueryPath.statistics;
@@ -31,4 +32,8 @@ export const getStatisticsCourse = (
   subPath: string
 ): Promise<IResponse<StatisticsCourse> | undefined> => {
   return getUrlRequest<IResponse<StatisticsCourse> | undefined>(path, subPath);
+};
+
+export const getWorldMap = (): Promise<WorldMap> => {
+  return getUrlRequest<WorldMap>(path);
 };

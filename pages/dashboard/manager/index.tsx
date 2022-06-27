@@ -2,10 +2,7 @@ import React from 'react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { Card, Col, Select, Progress, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import {
-  getStatisticsOverview,
-  getWorldMap,
-} from '../../../utils/service/statistics/statisticsService';
+import { getStatisticsOverview } from '../../../utils/service/statistics/statisticsService';
 import { StatisticsOverview } from '../../../utils/service/statistics/types';
 import { OverviewCol, OverviewIconCol, StyledOverviewCardContainer } from './index.style';
 import { DeploymentUnitOutlined, ReadOutlined, SolutionOutlined } from '@ant-design/icons';
@@ -53,10 +50,6 @@ const Overview: React.FC = () => {
   const [overView, setOverView] = useState<StatisticsOverview | undefined>();
   const [distributionRole, setDistributionRole] = useState<string>(Role.student);
 
-  const fetchWorldMap = async () => {
-    const res = await getWorldMap();
-    console.log(res);
-  };
   const fetchStatisticsOverview = async () => {
     const res = await getStatisticsOverview('overview');
     if (res) {
@@ -70,7 +63,6 @@ const Overview: React.FC = () => {
   };
   useEffect(() => {
     fetchStatisticsOverview();
-    fetchWorldMap();
   }, []);
 
   return (

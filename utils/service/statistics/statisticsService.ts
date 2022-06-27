@@ -6,8 +6,8 @@ import {
   StatisticsStudent,
   StatisticsTeacher,
   StatisticsCourse,
-  WorldMap,
 } from './types';
+import axios from 'axios';
 
 const path = QueryPath.statistics;
 
@@ -34,6 +34,8 @@ export const getStatisticsCourse = (
   return getUrlRequest<IResponse<StatisticsCourse> | undefined>(path, subPath);
 };
 
-export const getWorldMap = (): Promise<WorldMap> => {
-  return getUrlRequest<WorldMap>(path);
+export const getWorldMap = async () => {
+  return await axios.get(
+    'https://code.highcharts.com/mapdata/custom/world-palestine-highres.geo.json'
+  );
 };

@@ -21,21 +21,35 @@ export interface StatisticsOverview {
   };
 }
 
+export interface Statistic {
+  name: string;
+  amount: number;
+}
 export interface StatisticsStudent {
-  country: { name: string; amount: number }[];
+  country: Statistic[];
+  typeName: Statistic[];
+  courses: Statistic[];
+  ctime: Statistic[];
+  interest: Statistic[];
 }
 
-export type StatisticsTeacher = StatisticsStudent;
-export type StatisticsCourse = StatisticsStudent;
+export interface StatisticsTeacher {
+  country: Statistic[];
+  ctime: Statistic[];
+  skills: Record<string, Statistic & { level: string }[]>;
+  workExperience: string[];
+}
 
-// To parse this data:
-//
-//   import { Convert, WorldMap } from "./file";
-//
-//   const worldMap = Convert.toWorldMap(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
+export interface StatisticsCourse {
+  typeName: Statistic[];
+  ctime: Statistic[];
+  classTime: ClassTime[];
+}
+interface ClassTime {
+  name: string;
+  amount: number;
+  courses: { typeName: string; name: string; classTime: string[] }[];
+}
 
 export interface WorldMap {
   title: string;

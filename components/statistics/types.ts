@@ -1,5 +1,9 @@
 import { WorldMap } from '../../utils/service/statistics/types';
 
+export interface Statistics {
+  name: string;
+  amount: number;
+}
 export interface mapOptions {
   colorAxis?: {
     min: number;

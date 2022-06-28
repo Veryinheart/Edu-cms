@@ -2,8 +2,17 @@ import React from 'react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 import { Card, Col, Select, Progress, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import { getStatisticsOverview } from '../../../utils/service/statistics/statisticsService';
-import { StatisticsOverview } from '../../../utils/service/statistics/types';
+import {
+  getStatisticsOverview,
+  getStatisticsTeacher,
+  getStatisticsStudent,
+} from '../../../utils/service/statistics/statisticsService';
+import {
+  Statistic,
+  StatisticsOverview,
+  StatisticsStudent,
+  StatisticsTeacher,
+} from '../../../utils/service/statistics/types';
 import { OverviewCol, OverviewIconCol, StyledOverviewCardContainer } from './index.style';
 import { DeploymentUnitOutlined, ReadOutlined, SolutionOutlined } from '@ant-design/icons';
 import Distribution from '../../../components/statistics/Distribution';
@@ -48,21 +57,32 @@ const StyledOverviewCard = ({
 
 const Overview: React.FC = () => {
   const [overView, setOverView] = useState<StatisticsOverview | undefined>();
-  const [distributionRole, setDistributionRole] = useState<string>(Role.student);
+  const [distributionRole, setDistributionRole] = useState<string>(Role.teacher);
+  const [statisticTeacher, setStatisticTeacher] = useState<StatisticsTeacher | undefined>();
+  const [statisticStudent, setStatisticStudent] = useState<StatisticsStudent | undefined>();
 
-  const fetchStatisticsOverview = async () => {
-    const res = await getStatisticsOverview('overview');
-    if (res) {
-      console.log(res.data);
-      setOverView(res?.data);
+  const fetchStatisticsData = async () => {
+    const overviewRes = await getStatisticsOverview('overview');
+    const teacherRes = await getStatisticsTeacher('teacher');
+    const studentRes = await getStatisticsStudent('student');
+
+    if (overviewRes) {
+      setOverView(overviewRes?.data);
+    }
+    if (teacherRes) {
+      setStatisticTeacher(teacherRes?.data);
+    }
+    if (studentRes) {
+      setStatisticStudent(studentRes?.data);
     }
   };
+
   const handleDistributionChange = (value: string) => {
     console.log(value);
     setDistributionRole(value);
   };
   useEffect(() => {
-    fetchStatisticsOverview();
+    fetchStatisticsData();
   }, []);
 
   return (
@@ -116,7 +136,16 @@ const Overview: React.FC = () => {
                 </Select>
               }
             >
-              {distributionRole === Role.student ? <Distribution /> : <Distribution />}
+              {
+                <Distribution
+                  data={
+                    (distributionRole === Role.student
+                      ? statisticStudent?.country
+                      : statisticTeacher?.country) as Statistic[]
+                  }
+                  title={distributionRole}
+                />
+              }
             </Card>
           </Col>
 
@@ -130,7 +159,7 @@ const Overview: React.FC = () => {
                 </Select>
               }
             >
-              <Distribution />
+              {/* <Distribution /> */}
             </Card>
           </Col>
         </Row>

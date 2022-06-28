@@ -16,6 +16,7 @@ import {
 import { OverviewCol, OverviewIconCol, StyledOverviewCardContainer } from './index.style';
 import { DeploymentUnitOutlined, ReadOutlined, SolutionOutlined } from '@ant-design/icons';
 import Distribution from '../../../components/statistics/Distribution';
+import Pie from '../../../components/statistics/Pie';
 import { Role } from '../../../utils/service/user/types';
 
 const { Option } = Select;
@@ -159,7 +160,7 @@ const Overview: React.FC = () => {
                 </Select>
               }
             >
-              {/* <Distribution /> */}
+              <Pie />
             </Card>
           </Col>
         </Row>

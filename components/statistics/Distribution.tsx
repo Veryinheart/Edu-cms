@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
 import { getWorldMap } from '../../utils/service/statistics/statisticsService';
 import { WorldMap, Statistic } from '../../utils/service/statistics/types';
-import { mapOptions } from './types';
+import { MapOptions } from './types';
 
 // console.log(Highcharts.getOptions());
 const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => {
-  const [options, setOptions] = useState<mapOptions>({});
+  const [options, setOptions] = useState<MapOptions>({});
 
   const [worldMapData, setWorldMapData] = useState<WorldMap | null>(null);
 
@@ -15,7 +15,7 @@ const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => 
     const res = await getWorldMap();
 
     setWorldMapData(res.data);
-    setOptions({ ...options, series: [{ mapData: res.data }] });
+    setOptions({ series: [{ mapData: res.data }] });
   };
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => 
           [0, '#EFEFFF'],
           [0.5, '#7cb5ec'],
           [1, '#7cb5ec'],
-          // [0.5, Highcharts.getOptions().colors[0]],
+          // [0.5, Highcharts?.getOptions().colors[0]],
           // [1, Highcharts.color(Highcharts.getOptions().colors[0]).brighten(-0.5).get()],
         ],
       },
@@ -73,7 +73,7 @@ const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => 
       ],
     };
     setOptions(newOptions);
-  }, [data]);
+  }, [data, title, worldMapData]);
 
   return <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={options} />;
 };

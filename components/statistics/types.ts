@@ -4,7 +4,7 @@ export interface Statistics {
   name: string;
   amount: number;
 }
-export interface mapOptions {
+export interface MapOptions {
   colorAxis?: {
     min: number;
     stops: (string | number)[][];

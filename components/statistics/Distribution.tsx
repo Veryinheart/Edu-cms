@@ -8,14 +8,13 @@ import { MapOptions } from './types';
 // console.log(Highcharts.getOptions());
 const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => {
   const [options, setOptions] = useState<MapOptions>({});
-
   const [worldMapData, setWorldMapData] = useState<WorldMap | null>(null);
 
   const fetchWorldMap = async () => {
     const res = await getWorldMap();
 
     setWorldMapData(res.data);
-    setOptions({ series: [{ mapData: res.data }] });
+    setOptions({ ...options, series: [{ mapData: res.data }] });
   };
 
   useEffect(() => {

@@ -31,6 +31,7 @@ export interface StatisticsStudent {
   courses: Statistic[];
   ctime: Statistic[];
   interest: Statistic[];
+  type: Statistic[];
 }
 
 export interface StatisticsTeacher {
@@ -44,6 +45,8 @@ export interface StatisticsCourse {
   typeName: Statistic[];
   ctime: Statistic[];
   classTime: ClassTime[];
+  type: Statistic[];
+  createdAt: Statistic[];
 }
 interface ClassTime {
   name: string;

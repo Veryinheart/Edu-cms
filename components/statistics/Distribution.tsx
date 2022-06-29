@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
 import { getWorldMap } from '../../utils/service/statistics/statisticsService';
@@ -14,14 +14,31 @@ const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => 
     const res = await getWorldMap();
 
     setWorldMapData(res.data);
-    setOptions({ ...options, series: [{ mapData: res.data }] });
+    setOptions({ series: [{ mapData: res.data }] });
   };
 
   useEffect(() => {
     fetchWorldMap();
   }, []);
 
+  const charRef = useRef(null);
+
   useEffect(() => {
+    const { chart } = charRef.current;
+    const timer = setTimeout(() => {
+      chart.reflow();
+    }, 30);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
     const filteredData = data?.map((item: Statistic) => {
       const temp = worldMapData?.features.find((feature) => {
         return item.name.toLowerCase() === feature.properties.name.toLowerCase();
@@ -74,7 +91,14 @@ const Distribution = ({ data, title }: { data: Statistic[]; title: string }) => 
     setOptions(newOptions);
   }, [data, title, worldMapData]);
 
-  return <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={options} />;
+  return (
+    <HighchartsReact
+      highcharts={Highcharts}
+      constructorType={'mapChart'}
+      options={options}
+      ref={charRef}
+    />
+  );
 };
 
 export default Distribution;

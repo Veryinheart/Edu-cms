@@ -6,9 +6,11 @@ import {
   getStatisticsOverview,
   getStatisticsTeacher,
   getStatisticsStudent,
+  getStatisticsCourse,
 } from '../../../utils/service/statistics/statisticsService';
 import {
   Statistic,
+  StatisticsCourse,
   StatisticsOverview,
   StatisticsStudent,
   StatisticsTeacher,
@@ -59,13 +61,17 @@ const StyledOverviewCard = ({
 const Overview: React.FC = () => {
   const [overView, setOverView] = useState<StatisticsOverview | undefined>();
   const [distributionRole, setDistributionRole] = useState<string>(Role.teacher);
+
+  const [pieRole, setPieRole] = useState<string>(Role.student);
   const [statisticTeacher, setStatisticTeacher] = useState<StatisticsTeacher | undefined>();
   const [statisticStudent, setStatisticStudent] = useState<StatisticsStudent | undefined>();
+  const [statisticCourse, setStatisticCourse] = useState<StatisticsCourse | undefined>();
 
   const fetchStatisticsData = async () => {
     const overviewRes = await getStatisticsOverview('overview');
     const teacherRes = await getStatisticsTeacher('teacher');
     const studentRes = await getStatisticsStudent('student');
+    const courseRes = await getStatisticsCourse('course');
 
     if (overviewRes) {
       setOverView(overviewRes?.data);
@@ -74,10 +80,16 @@ const Overview: React.FC = () => {
       setStatisticTeacher(teacherRes?.data);
     }
     if (studentRes) {
+      // console.log(studentRes.data.type);
       setStatisticStudent(studentRes?.data);
     }
+    if (courseRes) {
+      setStatisticCourse(courseRes?.data);
+    }
   };
-
+  const handleTypeChange = (value: string) => {
+    setPieRole(value);
+  };
   const handleDistributionChange = (value: string) => {
     console.log(value);
     setDistributionRole(value);
@@ -154,13 +166,23 @@ const Overview: React.FC = () => {
             <Card
               title="Types"
               extra={
-                <Select defaultValue="lucy" style={{ width: 120 }} bordered={false}>
-                  <Option value="jack">Jack</Option>
-                  <Option value="lucy">Lucy</Option>
+                <Select defaultValue="student" bordered={false} onSelect={handleTypeChange}>
+                  <Option value="student">Student Type</Option>
+                  <Option value="course">Course Type</Option>
+                  <Option value="gender">Gender Type</Option>
                 </Select>
               }
             >
-              <Pie />
+              <Pie
+                data={
+                  pieRole === 'student'
+                    ? statisticStudent?.type
+                    : pieRole === 'course'
+                    ? statisticCourse.type
+                    : overView
+                }
+                title={pieRole}
+              />
             </Card>
           </Col>
         </Row>

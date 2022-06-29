@@ -1,5 +1,10 @@
 import { WorldMap } from '../../utils/service/statistics/types';
 
+export interface Gender {
+  unknown: number;
+  male: number;
+  female: number;
+}
 export interface Statistics {
   name: string;
   amount: number;

@@ -8,6 +8,7 @@ export enum Role {
   teacher = 'teacher',
   manager = 'manager',
 }
+
 export interface LoginRequest {
   role: string;
   email: string;

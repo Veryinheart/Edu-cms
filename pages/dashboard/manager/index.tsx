@@ -173,16 +173,30 @@ const Overview: React.FC = () => {
                 </Select>
               }
             >
-              <Pie
-                data={
-                  pieRole === 'student'
-                    ? statisticStudent?.type
-                    : pieRole === 'course'
-                    ? statisticCourse.type
-                    : overView
-                }
-                title={pieRole}
-              />
+              {pieRole === 'student' ? (
+                <Pie data={statisticStudent?.type as Statistic[]} title={pieRole} />
+              ) : pieRole === 'course' ? (
+                <Pie data={statisticCourse?.type as Statistic[]} title={pieRole} />
+              ) : (
+                <Row>
+                  <Col span={12}>
+                    <Pie
+                      data={Object.keys(overView?.student?.gender).map((item) => {
+                        return { 'name': item, amount: overView.student.gender[item] };
+                      })}
+                      title="Student Gender"
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <Pie
+                      data={Object.keys(overView?.teacher?.gender).map((item) => {
+                        return { 'name': item, amount: overView.teacher.gender[item] };
+                      })}
+                      title="Teacher Gender"
+                    />
+                  </Col>
+                </Row>
+              )}
             </Card>
           </Col>
         </Row>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { Statistic, StatisticsOverview } from '../../utils/service/statistics/types';
+import { Statistic } from '../../utils/service/statistics/types';
 
-const Pie = ({ data, title }: { data: StatisticsOverview | Statistic[]; title: string }) => {
+const Pie = ({ data, title }: { data: Statistic[]; title: string }) => {
+  console.log(data);
   const [options, setOptions] = useState<any>({
     chart: {
       plotBackgroundColor: null,
@@ -55,6 +56,7 @@ const Pie = ({ data, title }: { data: StatisticsOverview | Statistic[]; title: s
       return;
     }
     const source = data?.map((item) => ({ name: item.name, y: item.amount }));
+    console.log(source);
     const titleText = title?.split(/(?=[A-Z])/).join(' ') || '';
     setOptions({
       title: {

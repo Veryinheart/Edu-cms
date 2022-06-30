@@ -7,7 +7,7 @@ function hano(n, a, b, c) {
     hano(n - 1, b, a, c);
   }
 }
-// hano(3,'a','b','c');
+// hano(3,"a","b","c");
 
 //2 fibonacci
 
@@ -39,7 +39,7 @@ function deepClone(obj, hash = new WeakMap()) {
   if (obj instanceof Date) return new Date(obj);
   if (obj instanceof RegExp) return new RegExp(obj);
   // 可能是对象或者普通的值  如果是函数的话是不需要深拷贝
-  if (typeof obj !== 'object') return obj;
+  if (typeof obj !== "object") return obj;
   // 是对象的话就要进行深拷贝
   if (hash.get(obj)) return hash.get(obj);
   let cloneObj = new obj.constructor();
@@ -61,48 +61,49 @@ console.log(d); //  {name: 1, address: { x: 100 } }
 
 
 
+
 {
   "chart": {
     "plotBackgroundColor": null,
     "plotBorderWidth":null,
      "plotShadow": false,
-     "type": 'pie'
+     "type": "pie"
   },
    "title": {
-     "text": 'Browser market shares in January, 2018'
+     "text": "Browser market shares in January, 2018"
   },
   "tooltip": {
-    "pointFormat": '{series.name}: <b>{point.percentage:.1f}%</b>'
+    "pointFormat": "{series.name}: <b>{point.percentage:.1f}%</b>"
   },
   "accessibility": {
     "point": {
-      "valueSuffix": '%'
+      "valueSuffix": "%"
     }
   },
   "plotOptions": {
     "pie": {
      "allowPointSelect": true,
-      "cursor": 'pointer',
+      "cursor": "pointer",
       "dataLabels": {
         "enabled": true,
-        "format": '<b>{point.name}</b>: {point.percentage:.1f} %'
+        "format": "<b>{point.name}</b>: {point.percentage:.1f} %"
       }
     }
   },
   "series": [{
-    "name": 'Brands',
+    "name": "Brands",
     "colorByPoint": true,
     "data": [{
-      "name": 'Chrome',
+      "name": "Chrome",
       "y": 61.41,
       "sliced": true,
       "selected": true
     }, {
-      "name": 'Internet Explorer',
+      "name": "Internet Explorer",
       "y": 11.84
     }, {
-      "name": 'Firefox',
+      "name": "Firefox",
       "y": 10.85
     }]
-  }
+  }]
 }

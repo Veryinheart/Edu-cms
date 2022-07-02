@@ -76,9 +76,9 @@ const Line = ({
   });
 
   const convertToChartData = (dataSource) => {
-    const Res = dataSource?.createdAt.filter((item) => item.name.includes('2022'));
+    const res = dataSource?.createdAt.filter((item) => item.name.includes('2022'));
     const newArr = new Array(12).fill(0);
-    Res?.map((item) => {
+    res?.forEach((item) => {
       const index = Number(item.name.slice(-2));
       newArr[index - 1] = item?.amount;
     });

@@ -1,15 +1,15 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
 import { BarOptions } from './types';
 import { StatisticsTeacher, StatisticsStudent } from '../../utils/service/statistics/types';
 
 const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: StatisticsStudent }) => {
-  const xAxis = useMemo(() => {
-    if (teacher) {
-      return Object.keys(teacher?.skills);
-    }
-  }, [teacher]);
+  // const xAxis = useMemo(() => {
+  //   if (teacher) {
+  //     return Object.keys(teacher?.skills);
+  //   }
+  // }, [teacher]);
 
   const [options, setOptions] = useState<BarOptions>({
     chart: {
@@ -108,26 +108,11 @@ const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: Statis
 
     const stu = Object.values(student?.interest);
     stu.map((item) => {
-      // console.log(item);
       const index = Object.keys(teacher?.skills).findIndex((name) => name === item?.name);
       interestData[index] = item?.amount;
     });
 
     return { name: 'interest', data: interestData, stack: 'interest' };
-  };
-
-  const BarChartData = (
-    teacher: StatisticsTeacher,
-    student: StatisticsStudent
-  ): Array<{ name: string; data: number[]; stack: string }> => {
-    const interest = convertToInterestData(student, teacher);
-    const skills = convertToSkillsData(teacher);
-
-    if (interest && skills) {
-      return [...skills, interest];
-    } else {
-      return;
-    }
   };
 
   // reload the page
@@ -145,13 +130,28 @@ const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: Statis
   });
 
   useEffect(() => {
-    setOptions({
-      xAxis: {
-        categories: xAxis,
-      },
-      series: BarChartData(teacher, student),
-    });
-  }, [student, teacher, xAxis]);
+    const barChartData = (
+      teacher: StatisticsTeacher,
+      student: StatisticsStudent
+    ): Array<{ name: string; data: number[]; stack: string }> => {
+      const interest = convertToInterestData(student, teacher);
+      const skills = convertToSkillsData(teacher);
+      if (interest && skills) {
+        return [...skills, interest];
+      } else {
+        return;
+      }
+    };
+
+    if (teacher) {
+      setOptions({
+        xAxis: {
+          categories: Object.keys(teacher?.skills),
+        },
+        series: barChartData(teacher, student),
+      });
+    }
+  }, [student, teacher]);
 
   return <HighchartsReact highcharts={Highcharts} options={options} ref={charRef} />;
 };

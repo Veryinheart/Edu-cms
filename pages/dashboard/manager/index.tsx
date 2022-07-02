@@ -217,7 +217,9 @@ const Overview: React.FC = () => {
             </Card>
           </Col>
           <Col span={24}>
-            <TableChart />
+            <Card title="Course Schedule">
+              <TableChart course={statisticCourse} />
+            </Card>
           </Col>
         </Row>
       </DashboardLayout>

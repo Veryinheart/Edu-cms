@@ -170,3 +170,68 @@ export interface MapOptions {
     };
   }[];
 }
+
+export interface HeatOptions {
+  chart?: {
+    type: string;
+    plotBorderWidth: number;
+  };
+  title?: {
+    text: string;
+  };
+  xAxis?: {
+    categories: string[];
+  };
+
+  colorAxis?: {
+    min: number;
+    minColor: string;
+    maxColor: string;
+  };
+  legend?: {
+    align: string;
+    layout: string;
+    margin: number;
+    verticalAlign: string;
+    y: number;
+    symbolHeight: number;
+  };
+  tooltip?: {
+    formatter: () => string;
+  };
+  responsive?: {
+    rules: [
+      {
+        condition: {
+          maxWidth: number;
+        };
+        chartOptions: {
+          yAxis: {
+            labels: {
+              formatter: () => string;
+            };
+          };
+        };
+      }
+    ];
+  };
+  credits?: {
+    enabled: boolean;
+  };
+  yAxis?: {
+    categories: string[];
+    title: null;
+    reversed: true;
+  };
+  series?: [
+    {
+      name: string;
+      borderWidth: number;
+      data: number[]; // data format:  [column, row, amount] column, row 代表数据在表中的位置，amount：具体数据
+      dataLabels: {
+        enabled: true;
+        color: string;
+      };
+    }
+  ];
+}

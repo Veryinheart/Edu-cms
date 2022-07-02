@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { Statistic } from '../../utils/service/statistics/types';
+import { PieOptions } from './types';
 
 const Pie = ({ data, title }: { data: Statistic[]; title: string }) => {
-  console.log(data);
-  const [options, setOptions] = useState<any>({
+  const [options, setOptions] = useState<PieOptions>({
     chart: {
       plotBackgroundColor: null,
       plotBorderWidth: null,
@@ -55,22 +55,22 @@ const Pie = ({ data, title }: { data: Statistic[]; title: string }) => {
     if (!data) {
       return;
     }
-    const source = data?.map((item) => ({ name: item.name, y: item.amount }));
-    console.log(source);
+    const pieData = data?.map((item) => ({ name: item.name, y: item.amount }));
     const titleText = title?.split(/(?=[A-Z])/).join(' ') || '';
+
     setOptions({
       title: {
         text: `<span style="text-transform: capitalize">${titleText}</span>`,
       },
       subtitle: {
-        text: `${titleText.split(' ')[0]} total: ${source.reduce((acc, cur) => acc + cur.y, 0)}`,
+        text: `${titleText.split(' ')[0]} total: ${pieData.reduce((pre, cur) => pre + cur.y, 0)}`,
         align: 'right',
       },
       series: [
         {
           name: 'percentage',
           colorByPoint: true,
-          data: source,
+          data: pieData,
         },
       ],
     });

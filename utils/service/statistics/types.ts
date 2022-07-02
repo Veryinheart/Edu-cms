@@ -37,7 +37,7 @@ export interface StatisticsStudent {
 export interface StatisticsTeacher {
   country: Statistic[];
   ctime: Statistic[];
-  skills: Record<string, Statistic & { level: string }[]>;
+  skills: (Statistic & { level: number })[][];
   workExperience: string[];
 }
 

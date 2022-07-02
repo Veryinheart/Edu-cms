@@ -20,6 +20,9 @@ import { DeploymentUnitOutlined, ReadOutlined, SolutionOutlined } from '@ant-des
 import Distribution from '../../../components/statistics/Distribution';
 import Pie from '../../../components/statistics/Pie';
 import { Role } from '../../../utils/service/user/types';
+import Line from '../../../components/statistics/Line';
+import Bar from '../../../components/statistics/Bar';
+import TableChart from '../../../components/statistics/TableChart';
 
 const { Option } = Select;
 const StyledOverviewCard = ({
@@ -198,6 +201,23 @@ const Overview: React.FC = () => {
                 </Row>
               )}
             </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Line
+                course={statisticCourse}
+                student={statisticStudent}
+                teacher={statisticTeacher}
+              />
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Bar teacher={statisticTeacher} student={statisticStudent} />
+            </Card>
+          </Col>
+          <Col span={24}>
+            <TableChart />
           </Col>
         </Row>
         some table chart etc

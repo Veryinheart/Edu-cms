@@ -203,7 +203,7 @@ const Overview: React.FC = () => {
             </Card>
           </Col>
           <Col span={12}>
-            <Card>
+            <Card title="Increment">
               <Line
                 course={statisticCourse}
                 student={statisticStudent}
@@ -212,7 +212,7 @@ const Overview: React.FC = () => {
             </Card>
           </Col>
           <Col span={12}>
-            <Card>
+            <Card title="Languages">
               <Bar teacher={statisticTeacher} student={statisticStudent} />
             </Card>
           </Col>
@@ -220,7 +220,6 @@ const Overview: React.FC = () => {
             <TableChart />
           </Col>
         </Row>
-        some table chart etc
       </DashboardLayout>
     </>
   );

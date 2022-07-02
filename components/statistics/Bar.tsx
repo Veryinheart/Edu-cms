@@ -1,16 +1,15 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
 import { BarOptions } from './types';
 import { StatisticsTeacher, StatisticsStudent } from '../../utils/service/statistics/types';
 
 const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: StatisticsStudent }) => {
-  // console.log(Object.keys(teacher?.skills));
-  // console.log(teacher);
-  let xAxis;
-  if (teacher) {
-    xAxis = Object.keys(teacher?.skills);
-  }
+  const xAxis = useMemo(() => {
+    if (teacher) {
+      return Object.keys(teacher?.skills);
+    }
+  }, [teacher]);
 
   const [options, setOptions] = useState<BarOptions>({
     chart: {
@@ -28,9 +27,7 @@ const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: Statis
         text: 'Interests vs Skills',
       },
     },
-    xAxis: {
-      categories: xAxis,
-    },
+
     tooltip: {
       formatter: function () {
         return (
@@ -119,6 +116,20 @@ const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: Statis
     return { name: 'interest', data: interestData, stack: 'interest' };
   };
 
+  const BarChartData = (
+    teacher: StatisticsTeacher,
+    student: StatisticsStudent
+  ): Array<{ name: string; data: number[]; stack: string }> => {
+    const interest = convertToInterestData(student, teacher);
+    const skills = convertToSkillsData(teacher);
+
+    if (interest && skills) {
+      return [...skills, interest];
+    } else {
+      return;
+    }
+  };
+
   // reload the page
   const charRef = useRef(null);
 
@@ -134,20 +145,6 @@ const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: Statis
   });
 
   useEffect(() => {
-    const BarChartData = (
-      teacher: StatisticsTeacher,
-      student: StatisticsStudent
-    ): Array<{ name: string; data: number[]; stack: string }> => {
-      const interest = convertToInterestData(student, teacher);
-      const skills = convertToSkillsData(teacher);
-
-      if (interest && skills) {
-        return [...skills, interest];
-      } else {
-        return;
-      }
-    };
-
     setOptions({
       xAxis: {
         categories: xAxis,

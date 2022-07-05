@@ -5,12 +5,6 @@ import { BarOptions } from './types';
 import { StatisticsTeacher, StatisticsStudent } from '../../utils/service/statistics/types';
 
 const Bar = ({ teacher, student }: { teacher: StatisticsTeacher; student: StatisticsStudent }) => {
-  // const xAxis = useMemo(() => {
-  //   if (teacher) {
-  //     return Object.keys(teacher?.skills);
-  //   }
-  // }, [teacher]);
-
   const [options, setOptions] = useState<BarOptions>({
     chart: {
       type: 'column',

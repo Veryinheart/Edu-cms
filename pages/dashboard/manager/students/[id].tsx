@@ -17,7 +17,7 @@ function Page() {
   const [courses, setCourses] = useState<CourseType[]>([] || undefined);
   const [info, setInfo] = useState<{ label: string; value: string | number }[]>([] || undefined);
   const [about, setAbout] = useState<{ label: string; value: string | number }[]>([] || undefined);
-  // console.log(router);
+
   const user = userInfo();
   const columns: ColumnType<CourseType>[] = [
     {

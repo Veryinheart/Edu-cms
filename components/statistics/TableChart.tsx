@@ -1,18 +1,11 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts/highmaps';
 import { StatisticsCourse } from '../../utils/service/statistics/types';
 import { zip } from 'lodash';
-import { HeatOptions } from './types';
+import { HeatOptions, weekDays } from './types';
 
 const TableChart = ({ course }: { course: StatisticsCourse }) => {
-  const weekDays = useMemo(() => {
-    return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  }, []);
-
-  const yAxis = course?.classTime.map((item) => item.name).concat('<b>Total</b>');
-  // console.log(yAxis);
-
   function getPointCategoryName(point, dimension) {
     const series = point.series;
     const isY = dimension === 'y';
@@ -94,6 +87,8 @@ const TableChart = ({ course }: { course: StatisticsCourse }) => {
       return;
     }
 
+    const yAxis = course?.classTime.map((item) => item.name).concat('<b>Total</b>');
+
     const rowData = course.classTime.map((item) => {
       const ary = new Array(7).fill(0);
       const courses = item.courses
@@ -144,7 +139,7 @@ const TableChart = ({ course }: { course: StatisticsCourse }) => {
         },
       ],
     });
-  }, [course, weekDays, yAxis]);
+  }, [course]);
 
   return <HighchartsReact highcharts={Highcharts} options={options} ref={charRef} />;
 };

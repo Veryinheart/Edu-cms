@@ -28,7 +28,7 @@ export function getRole(): Role | undefined {
 
 export function getUserId(): number | undefined {
   const user = userInfo();
-  return +user!.userId;
+  return +user.userId;
 }
 
 export function deleteUserInfo(): void {

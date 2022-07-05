@@ -16,6 +16,7 @@ import { Affix, Breadcrumb, Layout, Menu, Space, Tooltip } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import Appbreadcrumb from '../Appbreadcrumb';
 import Logout from '../Logout';
 import {
   Logo,
@@ -121,6 +122,7 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
                 <Breadcrumb.Item>Detail</Breadcrumb.Item>
               ) : null}
             </StyledBreadcrumbContainer>
+            <Appbreadcrumb />
 
             <StyledContent>{children}</StyledContent>
           </Content>

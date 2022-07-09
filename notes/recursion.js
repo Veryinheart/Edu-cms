@@ -13,6 +13,7 @@ function hano(n, a, b, c) {
 
 // global variable  注意全局变量
 // 注意 实际问题 解决的  MAP object 选择
+
 function fibonacci(n) {
   let result = null;
   const cache = new Map();
@@ -37,7 +38,7 @@ fibonacci();
 function deepClone(obj, hash = new WeakMap()) {
   if (obj === null) return obj; // 如果是null或者undefined我就不进行拷贝操作
   // 可能是对象或者普通的值  如果是函数的话是不需要深拷贝
-  // if (typeof obj !== 'object') return obj;
+  if (typeof obj !== 'object') return obj;
   // 是对象的话就要进行深拷贝
   if (hash.get(obj)) return hash.get(obj);
   let cloneObj = new obj.constructor();
@@ -81,7 +82,8 @@ console.log(d); //  {name: 1, address: { x: 100 } }
         if(item.subNav){
 
           return  generateMenu(item.subNav) Menu.Item
-        }else{
+        } else
+        {
           
           return Menu
         }

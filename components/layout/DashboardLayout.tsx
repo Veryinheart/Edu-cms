@@ -12,12 +12,14 @@ import {
   SolutionOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Affix, Breadcrumb, Layout, Menu, Space, Tooltip } from 'antd';
+import { Affix, Layout, Menu, Space, Tooltip } from 'antd';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Appbreadcrumb from '../Appbreadcrumb';
 import Logout from '../Logout';
+import SideMenu from '../SideMenu';
+import { routes } from '../../utils/constants/routes';
 import {
   Logo,
   StyledBreadcrumbContainer,
@@ -25,20 +27,20 @@ import {
   StyledContent,
   StyledHeaderLayout,
 } from './index.style';
+import { getRole } from '../../utils/service/storage';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
-  const router = useRouter();
+  // const router = useRouter();
   const { children } = props;
   const [collapsed, setCollapsed] = useState(false);
 
   return (
     <>
       <Layout style={{ height: '100vh' }}>
-        <Affix>
-          <Sider
+        {/* <Sider
             collapsible
             collapsed={collapsed}
             onCollapse={() => {
@@ -85,8 +87,13 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
                 Message
               </Menu.Item>
             </Menu>
-          </Sider>
-        </Affix>
+          </Sider> */}
+        <SideMenu
+          data={routes.get(getRole())}
+          role={getRole()}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
 
         <Layout>
           <Affix>
@@ -113,16 +120,16 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
 
           <Content>
             <StyledBreadcrumbContainer>
-              <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
+              {/* <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
               <Breadcrumb.Item>Student</Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link href="/dashboard/manager/students">Student List</Link>
               </Breadcrumb.Item>
               {router.pathname === '/dashboard/manager/students/[id]' ? (
                 <Breadcrumb.Item>Detail</Breadcrumb.Item>
-              ) : null}
+              ) : null} */}
+              <Appbreadcrumb />
             </StyledBreadcrumbContainer>
-            <Appbreadcrumb />
 
             <StyledContent>{children}</StyledContent>
           </Content>

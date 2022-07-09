@@ -1,14 +1,18 @@
 import {
+  CalendarOutlined,
   DashboardOutlined,
   DeploymentUnitOutlined,
   EditOutlined,
   FileAddOutlined,
   MessageOutlined,
+  ProfileOutlined,
   ProjectOutlined,
   ReadOutlined,
   SolutionOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
+
+import { Role } from '../service/user/types';
 
 export enum RoutePath {
   manager = 'manager',
@@ -32,11 +36,6 @@ export interface SideNav {
   subNav?: SideNav[];
   hide?: boolean;
 }
-const overview: SideNav = {
-  path: [],
-  label: 'Overview',
-  icon: <DashboardOutlined />,
-};
 
 const students: SideNav = {
   path: [RoutePath.students],
@@ -44,6 +43,18 @@ const students: SideNav = {
   icon: <SolutionOutlined />,
   hideLinkInBreadcrumb: true,
   subNav: [{ path: [''], label: 'Student List', icon: <TeamOutlined /> }],
+};
+
+const courses: SideNav = {
+  path: [RoutePath.courses],
+  label: 'Course',
+  icon: <ReadOutlined />,
+  hideLinkInBreadcrumb: true,
+  subNav: [
+    { path: [''], label: 'All Courses', icon: <ProjectOutlined /> },
+    { path: [RoutePath.addCourse], label: 'Add Course', icon: <FileAddOutlined /> },
+    { path: [RoutePath.editCourse], label: 'Edit Course', icon: <EditOutlined /> },
+  ],
 };
 
 const teachers: SideNav = {
@@ -60,16 +71,34 @@ const teachers: SideNav = {
   ],
 };
 
-const courses: SideNav = {
+const overview: SideNav = {
+  path: [],
+  label: 'Overview',
+  icon: <DashboardOutlined />,
+};
+
+const studentCourses: SideNav = {
   path: [RoutePath.courses],
   label: 'Course',
   icon: <ReadOutlined />,
   hideLinkInBreadcrumb: true,
   subNav: [
     { path: [''], label: 'All Courses', icon: <ProjectOutlined /> },
-    { path: [RoutePath.addCourse], label: 'Add Course', icon: <FileAddOutlined /> },
-    { path: [RoutePath.editCourse], label: 'Edit Course', icon: <EditOutlined /> },
+    { path: [RoutePath.own], label: 'My Courses', icon: <FileAddOutlined /> },
   ],
+};
+
+const classSchedule: SideNav = {
+  path: [RoutePath.schedule],
+  label: 'Class Schedule',
+  icon: <CalendarOutlined />,
+};
+
+const profile: SideNav = {
+  path: [RoutePath.profile],
+  label: 'Profile',
+  hide: true,
+  icon: <ProfileOutlined />,
 };
 
 const messages: SideNav = {
@@ -77,3 +106,9 @@ const messages: SideNav = {
   label: 'Message',
   icon: <MessageOutlined />,
 };
+
+export const routes: Map<Role, SideNav[]> = new Map([
+  [Role.manager, [overview, students, teachers, courses, messages]],
+  [Role.teacher, [overview, classSchedule, students, courses, profile, messages]],
+  [Role.student, [overview, studentCourses, classSchedule, profile, messages]],
+]);

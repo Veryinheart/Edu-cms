@@ -1,19 +1,11 @@
 import {
   BellOutlined,
-  DashboardOutlined,
-  DeploymentUnitOutlined,
-  EditOutlined,
-  FileAddOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  MessageOutlined,
-  ProjectOutlined,
-  ReadOutlined,
-  SolutionOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Affix, Layout, Menu, Space, Tooltip } from 'antd';
-import Link from 'next/link';
+import { Affix, Layout, Space, Tooltip } from 'antd';
+
 // import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Appbreadcrumb from '../Appbreadcrumb';
@@ -21,7 +13,6 @@ import Logout from '../Logout';
 import SideMenu from '../SideMenu';
 import { routes } from '../../utils/constants/routes';
 import {
-  Logo,
   StyledBreadcrumbContainer,
   StyledCollapsedMenu,
   StyledContent,
@@ -29,8 +20,7 @@ import {
 } from './index.style';
 import { getRole } from '../../utils/service/storage';
 
-const { Sider, Content } = Layout;
-const { SubMenu } = Menu;
+const { Content } = Layout;
 
 const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
   // const router = useRouter();
@@ -40,7 +30,54 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
   return (
     <>
       <Layout style={{ height: '100vh' }}>
-        {/* <Sider
+        <Affix>
+          <SideMenu
+            data={routes.get(getRole())}
+            role={getRole()}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+          />
+        </Affix>
+        <Layout>
+          <Affix>
+            <StyledHeaderLayout>
+              <StyledCollapsedMenu
+                onClick={() => {
+                  setCollapsed(!collapsed);
+                }}
+              >
+                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              </StyledCollapsedMenu>
+
+              <StyledCollapsedMenu>
+                <Space size="large">
+                  <BellOutlined />
+
+                  <Tooltip placement="bottomRight" title={<Logout />} color={'white'}>
+                    <UserOutlined />
+                  </Tooltip>
+                </Space>
+              </StyledCollapsedMenu>
+            </StyledHeaderLayout>
+          </Affix>
+
+          <Content>
+            <StyledBreadcrumbContainer>
+              <Appbreadcrumb />
+            </StyledBreadcrumbContainer>
+
+            <StyledContent>{children}</StyledContent>
+          </Content>
+        </Layout>
+      </Layout>
+    </>
+  );
+};
+
+export default Dashboard;
+
+{
+  /* <Sider
             collapsible
             collapsed={collapsed}
             onCollapse={() => {
@@ -87,56 +124,5 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
                 Message
               </Menu.Item>
             </Menu>
-          </Sider> */}
-        <SideMenu
-          data={routes.get(getRole())}
-          role={getRole()}
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-        />
-
-        <Layout>
-          <Affix>
-            <StyledHeaderLayout>
-              <StyledCollapsedMenu
-                onClick={() => {
-                  setCollapsed(!collapsed);
-                }}
-              >
-                {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              </StyledCollapsedMenu>
-
-              <StyledCollapsedMenu>
-                <Space size="large">
-                  <BellOutlined />
-
-                  <Tooltip placement="bottomRight" title={<Logout />} color={'white'}>
-                    <UserOutlined />
-                  </Tooltip>
-                </Space>
-              </StyledCollapsedMenu>
-            </StyledHeaderLayout>
-          </Affix>
-
-          <Content>
-            <StyledBreadcrumbContainer>
-              {/* <Breadcrumb.Item>CMS Manager System</Breadcrumb.Item>
-              <Breadcrumb.Item>Student</Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <Link href="/dashboard/manager/students">Student List</Link>
-              </Breadcrumb.Item>
-              {router.pathname === '/dashboard/manager/students/[id]' ? (
-                <Breadcrumb.Item>Detail</Breadcrumb.Item>
-              ) : null} */}
-              <Appbreadcrumb />
-            </StyledBreadcrumbContainer>
-
-            <StyledContent>{children}</StyledContent>
-          </Content>
-        </Layout>
-      </Layout>
-    </>
-  );
-};
-
-export default Dashboard;
+          </Sider> */
+}

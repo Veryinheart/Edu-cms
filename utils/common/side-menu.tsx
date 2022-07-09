@@ -59,12 +59,6 @@ const memoizedGetKeyPathInfo = memoize(getKeyPathInfo, (data) =>
   data?.map((item) => item.label).join('_')
 );
 
-const isPathEqual = (target: string) => (current: string) => {
-  current = current.endsWith('/') ? current.slice(0, -1) : current;
-
-  return current === target;
-};
-
 export const getSideNavNameByKey = (key: string): string[] => {
   return key.split('/').map((item) => item.split('_')[0]);
 };
@@ -94,12 +88,23 @@ const omitDetailPath = (path: string): string => {
   return isDetail ? path.slice(0, path.lastIndexOf('/')) : path;
 };
 
+const isPathEqual = (target: string) => (current: string) => {
+  current = current.endsWith('/') ? current.slice(0, -1) : current;
+
+  return current === target;
+};
+
+// 获取当前
+
 export const getActiveKey = (data: SideNav[]) => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
   const activeRoute = omitDetailPath(router.pathname);
   const { paths, keys } = memoizedGetKeyPathInfo(data);
+  console.log(paths, keys);
   const isEqual = isPathEqual(activeRoute);
-  const index = paths.findIndex(isEqual);
+  const index = paths?.findIndex(isEqual);
+  // console.log(index);
 
   return keys[index] || '';
 };

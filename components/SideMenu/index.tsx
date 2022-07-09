@@ -27,6 +27,7 @@ const SideMenu = ({
     const userRole = getRole();
 
     return data.map((item, index) => {
+      console.log(item, index);
       const key = generateKey(item, index);
 
       if (item.subNav && !!item.subNav.length) {
@@ -73,33 +74,32 @@ const SideMenu = ({
   }, [role, data, renderSideMenu]);
 
   return (
-    <>
-      <Affix>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={() => {
-            setCollapsed(!collapsed);
-          }}
+    <Affix>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={() => {
+          setCollapsed(!collapsed);
+        }}
+        style={{ height: '100%' }}
+      >
+        {
+          <Logo>
+            <Link href="/" passHref={true}>
+              <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
+            </Link>
+          </Logo>
+        }
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultOpenKeys={defaultOpenKeys}
+          defaultSelectedKeys={defaultSelectedKeys}
         >
-          {
-            <Logo>
-              <Link href="/" passHref={true}>
-                <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
-              </Link>
-            </Logo>
-          }
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultOpenKeys={defaultOpenKeys}
-            defaultSelectedKeys={defaultSelectedKeys}
-          >
-            {sideMenuItems}
-          </Menu>
-        </Sider>
-      </Affix>
-    </>
+          {sideMenuItems}
+        </Menu>
+      </Sider>
+    </Affix>
   );
 };
 

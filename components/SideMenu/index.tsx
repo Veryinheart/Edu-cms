@@ -1,33 +1,30 @@
-import { Affix, Menu } from 'antd';
+import { Menu } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { routes, SideNav } from '../../utils/constants/routes';
 import { Role } from '../../utils/service/user/types';
 import { getRole } from '../../utils/service/storage';
 import { generateKey, getActiveKey } from '../../utils/common/side-menu';
 import Link from 'next/link';
-import Sider from 'antd/lib/layout/Sider';
-import { Logo } from '../layout/index.style';
 
 const SideMenu = ({
   data,
   role,
-  collapsed,
-  setCollapsed,
 }: {
   data: SideNav[];
   role: Role;
-  collapsed: boolean;
-  setCollapsed: (value: React.SetStateAction<boolean>) => void;
+  // collapsed: boolean;
+  // setCollapsed: (value: React.SetStateAction<boolean>) => void;
 }) => {
   const [sideMenuItems, setSideMenuItem] = useState<JSX.Element[]>();
 
   const sideNavMenu = routes.get(getRole());
+  console.log(sideNavMenu);
 
   const renderSideMenu = useCallback((data: SideNav[], parent = ''): JSX.Element[] => {
     const userRole = getRole();
 
     return data.map((item, index) => {
-      console.log(item, index);
+      // console.log(item, index);
       const key = generateKey(item, index);
 
       if (item.subNav && !!item.subNav.length) {
@@ -66,7 +63,7 @@ const SideMenu = ({
 
     return { defaultSelectedKeys, defaultOpenKeys };
   };
-  const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(sideNavMenu);
+  const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(routes.get(Role.manager));
 
   useEffect(() => {
     const res = renderSideMenu(data);
@@ -74,32 +71,14 @@ const SideMenu = ({
   }, [role, data, renderSideMenu]);
 
   return (
-    <Affix>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={() => {
-          setCollapsed(!collapsed);
-        }}
-        style={{ height: '100%' }}
-      >
-        {
-          <Logo>
-            <Link href="/" passHref={true}>
-              <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
-            </Link>
-          </Logo>
-        }
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultOpenKeys={defaultOpenKeys}
-          defaultSelectedKeys={defaultSelectedKeys}
-        >
-          {sideMenuItems}
-        </Menu>
-      </Sider>
-    </Affix>
+    <Menu
+      theme="dark"
+      mode="inline"
+      defaultOpenKeys={defaultOpenKeys}
+      defaultSelectedKeys={defaultSelectedKeys}
+    >
+      {sideMenuItems}
+    </Menu>
   );
 };
 

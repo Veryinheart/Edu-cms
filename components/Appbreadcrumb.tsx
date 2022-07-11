@@ -15,10 +15,11 @@ const Appbreadcrumb = () => {
   const path = router.pathname;
   const paths = path.split('/').slice(1);
   const root = '/' + paths.slice(0, 2).join('/');
-  console.log(root);
-  console.log(path);
+  // console.log(root);
+  // console.log(path);
   const role = getRole();
   const sideNav = routes.get(role) as SideNav[];
+  console.log(sideNav);
   const breadCrumbNames = getSideNavNameByPath(sideNav, path) || [];
   console.log(breadCrumbNames);
 

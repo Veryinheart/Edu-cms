@@ -13,14 +13,16 @@ import Logout from '../Logout';
 import SideMenu from '../SideMenu';
 import { routes } from '../../utils/constants/routes';
 import {
+  Logo,
   StyledBreadcrumbContainer,
   StyledCollapsedMenu,
   StyledContent,
   StyledHeaderLayout,
 } from './index.style';
 import { getRole } from '../../utils/service/storage';
+import Link from 'next/link';
 
-const { Content } = Layout;
+const { Content, Sider } = Layout;
 
 const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
   // const router = useRouter();
@@ -31,12 +33,23 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
     <>
       <Layout style={{ height: '100vh' }}>
         <Affix>
-          <SideMenu
-            data={routes.get(getRole())}
-            role={getRole()}
+          <Sider
+            collapsible
             collapsed={collapsed}
-            setCollapsed={setCollapsed}
-          />
+            onCollapse={() => {
+              setCollapsed(!collapsed);
+            }}
+            style={{ height: '100vh' }}
+          >
+            {
+              <Logo>
+                <Link href="/" passHref={true}>
+                  <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
+                </Link>
+              </Logo>
+            }
+            <SideMenu data={routes.get(getRole())} role={getRole()} />
+          </Sider>
         </Affix>
         <Layout>
           <Affix>

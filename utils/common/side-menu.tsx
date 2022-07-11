@@ -54,7 +54,7 @@ const getKeyPathInfo = (data: SideNav[]): { keys: string[]; paths: string[] } =>
 
   return { keys, paths };
 };
-
+//cache path
 const memoizedGetKeyPathInfo = memoize(getKeyPathInfo, (data) =>
   data?.map((item) => item.label).join('_')
 );
@@ -64,7 +64,7 @@ export const getSideNavNameByKey = (key: string): string[] => {
 };
 
 export const getSideNavNameByPath = (data: SideNav[], path: string): string[] => {
-  // console.log(data);
+  console.log(data, 'data');
   const isDetail = isDetailPath(path);
 
   const temp = data?.map((item) => item.label).join('_');
@@ -73,11 +73,12 @@ export const getSideNavNameByPath = (data: SideNav[], path: string): string[] =>
   path = isDetail ? path.split('/').slice(0, -1).join('/') : path;
 
   const { paths, keys } = memoizedGetKeyPathInfo(data);
-  console.log(paths, keys);
+  console.log(paths, keys, '76');
   const isEqual = isPathEqual(path);
   const index = paths?.findIndex(isEqual);
 
-  const result = keys && getSideNavNameByKey(keys[index] as string);
+  const result = keys && getSideNavNameByKey(keys[index]);
+  console.log(result, 'result');
 
   return isDetail ? [...result, 'Detail'] : result;
 };
@@ -88,20 +89,25 @@ const omitDetailPath = (path: string): string => {
   return isDetail ? path.slice(0, path.lastIndexOf('/')) : path;
 };
 
+//
 const isPathEqual = (target: string) => (current: string) => {
   current = current.endsWith('/') ? current.slice(0, -1) : current;
 
   return current === target;
 };
 
-// 获取当前
+// 获取当前Key
 
 export const getActiveKey = (data: SideNav[]) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
+
+  // console.log(data, 'data');
+  // console.log(router);
   const activeRoute = omitDetailPath(router.pathname);
+  // console.log(activeRoute);
   const { paths, keys } = memoizedGetKeyPathInfo(data);
-  console.log(paths, keys);
+  // console.log(paths, keys, router.pathname);
   const isEqual = isPathEqual(activeRoute);
   const index = paths?.findIndex(isEqual);
   // console.log(index);

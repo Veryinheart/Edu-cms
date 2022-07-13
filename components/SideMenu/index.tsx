@@ -17,8 +17,8 @@ const SideMenu = ({
 }) => {
   const [sideMenuItems, setSideMenuItem] = useState<JSX.Element[]>();
 
-  const sideNavMenu = routes.get(getRole());
-  console.log(sideNavMenu);
+  // const sideNavMenu = routes.get(getRole());
+  // console.log(sideNavMenu);
 
   const renderSideMenu = useCallback((data: SideNav[], parent = ''): JSX.Element[] => {
     const userRole = getRole();
@@ -63,7 +63,7 @@ const SideMenu = ({
 
     return { defaultSelectedKeys, defaultOpenKeys };
   };
-  const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(routes.get(Role.manager));
+  const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(routes.get(getRole()));
 
   useEffect(() => {
     const res = renderSideMenu(data);

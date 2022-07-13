@@ -22,14 +22,14 @@ function Students({ total: tol, students: stu }: { total: number; students: Stud
   const [total, setTotal] = useState<number>(tol);
   const [dataFiltered, setDataFiltered] = useState<Student[] | undefined>(stu);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [EditingStudent, setEditingStudent] = useState<{
+  const [editingStudent, setEditingStudent] = useState<{
     student: Student | null;
     edit: boolean;
   }>({ student: null, edit: false });
 
   const showModal = () => {
-    setEditingStudent((EditingStudent) => ({
-      ...EditingStudent,
+    setEditingStudent((editingStudent) => ({
+      ...editingStudent,
       student: null,
       edit: false,
     }));
@@ -103,8 +103,8 @@ function Students({ total: tol, students: stu }: { total: number; students: Stud
         <Space size="middle">
           <TextLink
             onClick={() => {
-              setEditingStudent((EditingStudent) => ({
-                ...EditingStudent,
+              setEditingStudent((editingStudent) => ({
+                ...editingStudent,
                 student: record,
                 edit: true,
               }));
@@ -194,7 +194,7 @@ function Students({ total: tol, students: stu }: { total: number; students: Stud
         }}
       />
       <Modal
-        title={EditingStudent.edit ? 'Edit student' : 'Add Student'}
+        title={editingStudent.edit ? 'Edit student' : 'Add Student'}
         centered
         visible={isModalVisible}
         onCancel={handleCancel}
@@ -205,7 +205,7 @@ function Students({ total: tol, students: stu }: { total: number; students: Stud
         ]}
       >
         <StudentForm
-          EditingStudent={EditingStudent}
+          editingStudent={editingStudent}
           setIsModalVisible={setIsModalVisible}
           isModalVisible={isModalVisible}
           fetchData={fetchData}

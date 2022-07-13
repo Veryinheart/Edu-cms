@@ -64,21 +64,21 @@ export const getSideNavNameByKey = (key: string): string[] => {
 };
 
 export const getSideNavNameByPath = (data: SideNav[], path: string): string[] => {
-  console.log(data, 'data');
+  // console.log(data, 'data');
   const isDetail = isDetailPath(path);
 
-  const temp = data?.map((item) => item.label).join('_');
-  console.log(temp);
+  // const temp = data?.map((item) => item.label).join('_');
+  // console.log(temp);
 
   path = isDetail ? path.split('/').slice(0, -1).join('/') : path;
 
   const { paths, keys } = memoizedGetKeyPathInfo(data);
-  console.log(paths, keys, '76');
+  // console.log(paths, keys, '76');
   const isEqual = isPathEqual(path);
   const index = paths?.findIndex(isEqual);
 
   const result = keys && getSideNavNameByKey(keys[index]);
-  console.log(result, 'result');
+  // console.log(result, 'result');
 
   return isDetail ? [...result, 'Detail'] : result;
 };

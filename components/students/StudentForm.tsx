@@ -13,7 +13,7 @@ import { addStudent, updateStudent } from '../../utils/service/students/studentS
 
 interface IProps {
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  EditingStudent: {
+  editingStudent: {
     student: Student | null;
     edit: boolean;
   };
@@ -23,22 +23,22 @@ interface IProps {
 
 function StudentForm(props: IProps) {
   const [form] = Form.useForm();
-  const { EditingStudent, setIsModalVisible, fetchData } = props;
+  const { editingStudent, setIsModalVisible, fetchData } = props;
 
   useEffect(() => {
-    form.setFieldsValue({ ...EditingStudent.student, type: EditingStudent?.student?.type?.id });
+    form.setFieldsValue({ ...editingStudent.student, type: editingStudent?.student?.type?.id });
 
     return () => {
       form.resetFields();
     };
-  }, [EditingStudent, form]);
+  }, [editingStudent, form]);
 
   const handleEditStudent = async (param: UpdateStudentRequest) => {
     try {
       // console.log(param);
       const res = await updateStudent({
         ...param,
-        id: EditingStudent?.student?.id as number,
+        id: editingStudent?.student?.id as number,
       });
 
       if (res) {
@@ -80,7 +80,7 @@ function StudentForm(props: IProps) {
       validateMessages={ValidateMessages}
       onFinish={(param) => {
         console.log(param);
-        EditingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
+        editingStudent.edit ? handleEditStudent(param) : handleAddStudent(param);
       }}
     >
       <Form.Item label="Name" name="name" rules={[{ required: true }]}>
@@ -106,7 +106,7 @@ function StudentForm(props: IProps) {
       </Form.Item>
       <ModalFormSubmit>
         <Button type="primary" htmlType="submit">
-          {EditingStudent.edit ? 'Update' : 'Add'}
+          {editingStudent.edit ? 'Update' : 'Add'}
         </Button>
       </ModalFormSubmit>
     </Form>

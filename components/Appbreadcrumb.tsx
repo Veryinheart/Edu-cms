@@ -10,18 +10,17 @@ import { deepSearchRecordFactory } from '../utils/common/deep-search';
 
 const Appbreadcrumb = () => {
   const router = useRouter();
-  // console.log(router);
 
   const path = router.pathname;
   const paths = path.split('/').slice(1);
   const root = '/' + paths.slice(0, 2).join('/');
   // console.log(root);
-  // console.log(path);
+
   const role = getRole();
   const sideNav = routes.get(role) as SideNav[];
-  console.log(sideNav);
+  // console.log(sideNav);
   const breadCrumbNames = getSideNavNameByPath(sideNav, path) || [];
-  console.log(breadCrumbNames);
+  // console.log(breadCrumbNames);
 
   return (
     <Breadcrumb>
@@ -30,6 +29,7 @@ const Appbreadcrumb = () => {
       </Breadcrumb.Item>
 
       {breadCrumbNames.map((name, index) => {
+        // console.log(name);
         if (name === 'Detail') {
           return <Breadcrumb.Item key={index}>Detail</Breadcrumb.Item>;
         }
@@ -39,9 +39,11 @@ const Appbreadcrumb = () => {
           name,
           'subNav'
         )(sideNav);
+        // console.log(record);
 
         const { navs }: { source: SideNav[]; navs: SideNav[] } = record.reduce(
           (acc, cur) => {
+            // console.log(acc);
             const item = acc.source[acc.source.length + cur];
 
             return { source: item.subNav, navs: [...acc.navs, item] };

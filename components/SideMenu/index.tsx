@@ -5,6 +5,7 @@ import { Role } from '../../utils/service/user/types';
 import { getRole } from '../../utils/service/storage';
 import { generateKey, getActiveKey } from '../../utils/common/side-menu';
 import Link from 'next/link';
+import useRole from '../custom-hooks/useRole';
 
 const SideMenu = ({
   data,
@@ -22,6 +23,7 @@ const SideMenu = ({
 
   const renderSideMenu = useCallback((data: SideNav[], parent = ''): JSX.Element[] => {
     const userRole = getRole();
+    console.log('sidemenu', userRole);
 
     return data.map((item, index) => {
       // console.log(item, index);
@@ -63,7 +65,8 @@ const SideMenu = ({
 
     return { defaultSelectedKeys, defaultOpenKeys };
   };
-  const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(routes.get(getRole()));
+
+  const { defaultOpenKeys, defaultSelectedKeys } = getMenuConfig(routes.get(useRole()));
 
   useEffect(() => {
     const res = renderSideMenu(data);

@@ -23,7 +23,6 @@ import { Role } from '../../../utils/service/user/types';
 import Line from '../../../components/statistics/Line';
 import Bar from '../../../components/statistics/Bar';
 import TableChart from '../../../components/statistics/TableChart';
-import { useRouter } from 'next/router';
 
 const { Option } = Select;
 const StyledOverviewCard = ({
@@ -63,9 +62,6 @@ const StyledOverviewCard = ({
 };
 
 const Overview: React.FC = () => {
-  const router = useRouter();
-  console.log(router);
-
   const [overView, setOverView] = useState<StatisticsOverview | undefined>();
   const [distributionRole, setDistributionRole] = useState<string>(Role.teacher);
 

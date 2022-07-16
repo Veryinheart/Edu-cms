@@ -7,6 +7,7 @@ import { SideNav } from '../utils/constants/routes';
 import { routes } from '../utils/constants/routes';
 import { getSideNavNameByPath } from '../utils/common/side-menu';
 import { deepSearchRecordFactory } from '../utils/common/deep-search';
+import useRole from './custom-hooks/useRole';
 
 const Appbreadcrumb = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const Appbreadcrumb = () => {
   const root = '/' + paths.slice(0, 2).join('/');
   // console.log(root);
 
-  const role = getRole();
+  const role = useRole();
   const sideNav = routes.get(role) as SideNav[];
   // console.log(sideNav);
   const breadCrumbNames = getSideNavNameByPath(sideNav, path) || [];

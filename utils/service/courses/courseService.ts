@@ -1,5 +1,5 @@
 import { QueryPath } from '../../constants/api';
-import { getParamRequest, getUrlRequest } from '../request';
+import { getParamRequest } from '../request';
 import { IResponse } from '../apiConfig';
 
 interface GetCourseRequest {
@@ -38,7 +38,7 @@ export interface Type {
   name: string;
 }
 
-export interface CourseDetail {
+export interface CourseDetailType {
   createdAt: Date;
   updatedAt: Date;
   id: number;
@@ -116,6 +116,6 @@ export const getCourses = (
 
 export const getCourseDetailById = (
   id: number | string | string[] | undefined
-): Promise<IResponse<CourseDetail> | undefined> => {
-  return getUrlRequest<IResponse<CourseDetail> | undefined>(path, id);
+): Promise<IResponse<CourseDetailType> | undefined> => {
+  return getParamRequest<IResponse<CourseDetailType> | undefined>(`${path}/detail`, { id: id });
 };

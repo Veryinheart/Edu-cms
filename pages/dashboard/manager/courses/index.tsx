@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../../../components/layout/DashboardLayout';
 import { getCourses, CourseList } from '../../../../utils/service/courses/courseService';
-import { Row, Col, Card, Typography, Button, Divider, Skeleton, BackTop, Spin } from 'antd';
+import { Row, Col, Card, Button, Divider, Skeleton, BackTop, Spin } from 'antd';
 import Image from 'next/image';
-import { CardItemWrapper } from './index.style';
-import { HeartFilled, UserOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { durationType } from './types';
 import { getRole } from '../../../../utils/service/storage';
 import Link from 'next/link';
-// console.log(getRole());
-const { Text } = Typography;
-
-const CardItem = ({ children }: { children: JSX.Element }) => {
-  return <CardItemWrapper>{children}</CardItemWrapper>;
-};
+import { CardOverview } from '../../../../components/courses/CourseCard';
 
 const Courses = () => {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
@@ -72,42 +64,7 @@ const Courses = () => {
                       />
                     }
                   >
-                    <h3>{course.name}</h3>
-                    <CardItem>
-                      <>
-                        {course.startTime}
-                        <div>
-                          <HeartFilled style={{ color: 'red' }} /> <strong>{course.star}</strong>
-                        </div>
-                      </>
-                    </CardItem>
-                    <CardItem>
-                      <>
-                        <div>Duration</div>{' '}
-                        <strong>
-                          {`${course?.duration}`}
-                          {`${durationType[course?.durationUnit]}`}
-                          {'s'}
-                        </strong>
-                      </>
-                    </CardItem>
-                    <CardItem>
-                      <>
-                        <div>Teacher</div>
-                        <Link href="//dashboard/manager/teachers" passHref>
-                          <strong>{course.teacherName}</strong>
-                        </Link>
-                      </>
-                    </CardItem>
-                    <CardItem>
-                      <>
-                        <div>
-                          <UserOutlined style={{ color: '#1890ff' }} />
-                          <Text style={{ marginLeft: '2px' }}>Student Limit</Text>
-                        </div>
-                        <strong>{course.maxStudents}</strong>
-                      </>
-                    </CardItem>
+                    <CardOverview course={course} />
                     <div>
                       <Link href={`/dashboard/${getRole()}/courses/${course.id}`} passHref>
                         <Button type="primary">Read More</Button>

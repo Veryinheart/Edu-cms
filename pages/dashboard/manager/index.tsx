@@ -61,7 +61,7 @@ const StyledOverviewCard = ({
   );
 };
 
-const Overview: React.FC = () => {
+const Overview: React.FC<{ role: string }> = ({ role }) => {
   const [overView, setOverView] = useState<StatisticsOverview | undefined>();
   const [distributionRole, setDistributionRole] = useState<string>(Role.teacher);
 
@@ -103,7 +103,7 @@ const Overview: React.FC = () => {
 
   return (
     <>
-      <DashboardLayout>
+      <DashboardLayout userRole={role}>
         {overView && (
           <StyledOverviewCardContainer>
             <Row align="middle" gutter={[24, 16]}>
@@ -228,3 +228,11 @@ const Overview: React.FC = () => {
 };
 
 export default Overview;
+
+export async function getServerSideProps(context) {
+  const paths = context.resolvedUrl.split('/');
+
+  return {
+    props: { props: { role: paths[2] } },
+  };
+}

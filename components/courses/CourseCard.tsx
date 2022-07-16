@@ -45,9 +45,7 @@ export const CardOverview = ({ course }: { course: CourseList }) => {
         <>
           <div>Teacher</div>
           <div style={{ fontWeight: 'bold' }}>
-            <Link href="/dashboard/manager" passHref>
-              {course?.teacherName}
-            </Link>
+            <Link href="/dashboard/manager">{course?.teacherName}</Link>
           </div>
         </>
       </CardItem>

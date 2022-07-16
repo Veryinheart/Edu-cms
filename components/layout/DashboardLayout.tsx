@@ -24,9 +24,11 @@ import Link from 'next/link';
 
 const { Content, Sider } = Layout;
 
-const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) => {
-  // const router = useRouter();
-  const { children } = props;
+type LayoutProps = {
+  userRole?: string;
+};
+
+const Dashboard: React.FC<LayoutProps> = ({ children, userRole }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -76,7 +78,7 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
 
           <Content className="contentDiv">
             <StyledBreadcrumbContainer>
-              <Appbreadcrumb />
+              <Appbreadcrumb userRole={userRole} />
             </StyledBreadcrumbContainer>
 
             <StyledContent>{children}</StyledContent>

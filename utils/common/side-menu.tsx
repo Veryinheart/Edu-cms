@@ -60,11 +60,11 @@ const memoizedGetKeyPathInfo = memoize(getKeyPathInfo, (data) =>
 );
 
 export const getSideNavNameByKey = (key: string): string[] => {
-  return key.split('/').map((item) => item.split('_')[0]);
+  return key?.split('/').map((item) => item.split('_')[0]);
 };
 
 export const getSideNavNameByPath = (data: SideNav[], path: string): string[] => {
-  // console.log(data, 'data');
+  console.log(data, 'data');
   const isDetail = isDetailPath(path);
 
   // const temp = data?.map((item) => item.label).join('_');
@@ -73,11 +73,11 @@ export const getSideNavNameByPath = (data: SideNav[], path: string): string[] =>
   path = isDetail ? path.split('/').slice(0, -1).join('/') : path;
 
   const { paths, keys } = memoizedGetKeyPathInfo(data);
-  // console.log(paths, keys, '76');
+  console.log(paths, keys, '76');
   const isEqual = isPathEqual(path);
   const index = paths?.findIndex(isEqual);
 
-  const result = keys && getSideNavNameByKey(keys[index]);
+  const result = (keys && getSideNavNameByKey(keys[index])) ?? [];
   // console.log(result, 'result');
 
   return isDetail ? [...result, 'Detail'] : result;

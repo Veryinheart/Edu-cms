@@ -1,7 +1,8 @@
 import React from 'react';
+import DashboardLayout from '../../../../components/layout/DashboardLayout';
 
 const CourseDetail = () => {
-  return <div>CourseDetail</div>;
+  return <DashboardLayout></DashboardLayout>;
 };
 
 export default CourseDetail;

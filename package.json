@@ -14,6 +14,7 @@
     "@types/crypto-js": "^4.1.0",
     "@types/highcharts": "^7.0.0",
     "@types/lodash": "^4.14.178",
+    "@types/react-infinite-scroll-component": "^5.0.0",
     "@types/styled-components": "^5.1.21",
     "antd": "^4.18.5",
     "axios": "^0.25.0",
@@ -25,6 +26,7 @@
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-query": "^3.34.14",
     "styled-components": "^5.3.3"
   },

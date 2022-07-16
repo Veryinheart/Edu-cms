@@ -74,7 +74,7 @@ const Dashboard: React.FC = (props: React.PropsWithChildren<React.ReactNode>) =>
             </StyledHeaderLayout>
           </Affix>
 
-          <Content>
+          <Content className="contentDiv">
             <StyledBreadcrumbContainer>
               <Appbreadcrumb />
             </StyledBreadcrumbContainer>

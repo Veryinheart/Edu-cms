@@ -23,6 +23,7 @@ export function getToken(): string | undefined {
 
 export function getRole(): Role | undefined {
   const user = userInfo();
+
   return user?.role;
 }
 

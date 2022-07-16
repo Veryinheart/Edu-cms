@@ -23,7 +23,7 @@ const SideMenu = ({
 
   const renderSideMenu = useCallback((data: SideNav[], parent = ''): JSX.Element[] => {
     const userRole = getRole();
-    console.log('sidemenu', userRole);
+    // console.log('sidemenu', userRole);
 
     return data.map((item, index) => {
       // console.log(item, index);

@@ -83,16 +83,16 @@ const Courses = () => {
 
 export default Courses;
 
-export async function getServerSideProps(context) {
-  console.log(context);
-  const paths = context.resolvedUrl.split('/');
-  console.log(paths);
-  console.log('[ context.path  courses] >');
+// export async function getServerSideProps(context) {
+//   console.log(context);
+//   const paths = context.resolvedUrl.split('/');
+//   console.log(paths);
+//   console.log('[ context.path  courses] >');
 
-  // const paginator = { page: 1, limit: 20 };
-  // const res = await getStudents(paginator);
+//   // const paginator = { page: 1, limit: 20 };
+//   // const res = await getStudents(paginator);
 
-  return {
-    props: { role: paths[2] },
-  };
-}
+//   return {
+//     props: { role: paths[2] },
+//   };
+// }

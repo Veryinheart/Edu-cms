@@ -22,9 +22,9 @@ const Appbreadcrumb = ({ userRole }: { userRole: string }) => {
   // console.log(role, '22 app b');
   // console.log(userRole, '23 app b');
   const sideNav = routes.get(userRole1) as SideNav[];
-  console.log(sideNav);
+  // console.log(sideNav);
   const breadCrumbNames = getSideNavNameByPath(sideNav, path) || [];
-  console.log(breadCrumbNames);
+  // console.log(breadCrumbNames);
 
   return (
     <Breadcrumb>

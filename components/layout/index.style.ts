@@ -15,6 +15,11 @@ export const StyledCollapsedMenu = styled.div`
   }
 `;
 
+export const LogOutWrapper = styled.div`
+  font-size: 18px;
+  color: 'white';
+`;
+
 export const StyledLogo = styled.div`
   height: 32px;
   margin: 16px;

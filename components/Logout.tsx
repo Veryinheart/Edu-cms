@@ -18,7 +18,7 @@ function Logout() {
         router.push('/login');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       if (axios.isAxiosError(error)) {
         message.error(error.response?.data.msg);
       }
@@ -26,9 +26,11 @@ function Logout() {
   };
 
   return (
-    <Button type="text" onClick={logout}>
-      <LogoutOutlined /> Logout
-    </Button>
+    <>
+      <Button type="text" icon={<LogoutOutlined />} onClick={logout}>
+        Logout
+      </Button>
+    </>
   );
 }
 

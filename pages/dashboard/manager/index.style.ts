@@ -34,3 +34,15 @@ export const StyledOverviewCardContainer = styled.div`
 export const StyledGraphicContainer = styled.div`
   display: flex;
 `;
+
+export const MessageHeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const MessageListContainer = styled.div`
+  padding: '0 20px';
+  overflow: 'scroll';
+  max-height: '75vh';
+`;

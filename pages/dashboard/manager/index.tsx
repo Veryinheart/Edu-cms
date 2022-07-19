@@ -230,6 +230,7 @@ const Overview: React.FC<{ role: string }> = ({ role }) => {
 export default Overview;
 
 export async function getServerSideProps(context) {
+  console.log(context);
   const paths = context.resolvedUrl.split('/');
 
   return {

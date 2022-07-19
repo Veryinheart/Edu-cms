@@ -19,7 +19,7 @@ const CardItem = ({ children }: { children: JSX.Element }) => {
 const { Text, Title } = Typography;
 
 export const CardOverview = ({ course }: { course: CourseList }) => {
-  console.log(course?.teacherName);
+  // console.log(course?.teacherName);
   return (
     <>
       <Title level={5}>{course?.name}</Title>

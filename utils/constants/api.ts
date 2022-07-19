@@ -6,6 +6,7 @@ export enum QueryPath {
   overview = 'overview',
   courses = 'courses',
   teachers = 'teachers',
+  messages = 'message',
 }
 
 export enum ActionPath {

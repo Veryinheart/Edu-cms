@@ -4,10 +4,8 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Affix, Layout, Space, Tooltip } from 'antd';
-
-// import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { Affix, Layout, Space, Dropdown, Menu, Badge, Avatar, Popover } from 'antd';
+import React, { useEffect, useState } from 'react';
 import Appbreadcrumb from '../Appbreadcrumb';
 import Logout from '../Logout';
 import SideMenu from '../SideMenu';
@@ -18,18 +16,49 @@ import {
   StyledCollapsedMenu,
   StyledContent,
   StyledHeaderLayout,
+  LogOutWrapper,
 } from './index.style';
 import { getRole } from '../../utils/service/storage';
 import Link from 'next/link';
+import { UserId } from '../../utils/service/user/types';
+import {
+  getMessageStatisticById,
+  MessageStatisticType,
+} from '../../utils/service/messages/messagesService';
 
 const { Content, Sider } = Layout;
 
 type LayoutProps = {
   userRole?: string;
+  userId?: number;
 };
 
-const Dashboard: React.FC<LayoutProps> = ({ children, userRole }) => {
+const logOutStyle = { color: 'white', fontSize: '20px' };
+
+const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
   const [collapsed, setCollapsed] = useState(false);
+  // const [loading,setLoading]=useState<boolean>(false);
+  const [messageStatistic, setMessageStatistic] = useState<MessageStatisticType>();
+
+  useEffect(() => {
+    const getMessageStatistic = async () => {
+      const res = await getMessageStatisticById(userId);
+      if (res) {
+        console.log(res);
+        setMessageStatistic(res?.data);
+      }
+    };
+
+    getMessageStatistic();
+  }, [userId]);
+
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <Logout />
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
     <>
@@ -64,15 +93,26 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole }) => {
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
               </StyledCollapsedMenu>
 
-              <StyledCollapsedMenu>
-                <Space size="large">
-                  <BellOutlined />
-
-                  <Tooltip placement="bottomRight" title={<Logout />} color={'white'}>
-                    <UserOutlined />
-                  </Tooltip>
-                </Space>
-              </StyledCollapsedMenu>
+              <div>
+                <LogOutWrapper>
+                  <Space style={{ marginRight: '3rem' }}>
+                    <Badge
+                      count={
+                        messageStatistic?.receive?.message?.unread +
+                        messageStatistic?.receive?.notification?.unread
+                      }
+                      offset={[15, 0]}
+                    >
+                      <BellOutlined style={logOutStyle} />
+                    </Badge>
+                  </Space>
+                  <Space size="large">
+                    <Dropdown overlay={menu} placement="bottomRight">
+                      <Avatar icon={<UserOutlined style={logOutStyle} />} />
+                    </Dropdown>
+                  </Space>
+                </LogOutWrapper>
+              </div>
             </StyledHeaderLayout>
           </Affix>
 
@@ -91,53 +131,14 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole }) => {
 
 export default Dashboard;
 
-{
-  /* <Sider
-            collapsible
-            collapsed={collapsed}
-            onCollapse={() => {
-              setCollapsed(!collapsed);
-            }}
-            style={{ height: '100vh' }}
-          >
-            {
-              <Logo>
-                <Link href="/" passHref={true}>
-                  <span style={{ color: '#fff', cursor: 'pointer' }}>CMS</span>
-                </Link>
-              </Logo>
-            }
+export async function getServerSideProps(context) {
+  // console.log(context);
+  const paths = context.resolvedUrl.split('/');
+  const role = paths[2];
+  const userId = UserId[role];
+  // console.log(userId);
 
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} defaultOpenKeys={['sub1']}>
-              <Menu.Item key="1" icon={<DashboardOutlined />}>
-                Overview
-              </Menu.Item>
-              <SubMenu key="sub1" icon={<SolutionOutlined />} title="Student">
-                <Menu.Item key="2" icon={<UserOutlined />}>
-                  <Link href="/dashboard/manager/students" passHref>
-                    Student List
-                  </Link>
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub2" icon={<DeploymentUnitOutlined />} title="Teacher">
-                <Menu.Item key="3" icon={<UserOutlined />}>
-                  Teacher List
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub3" icon={<ReadOutlined />} title="Course">
-                <Menu.Item key="All-Course" icon={<ProjectOutlined />}>
-                  All Course
-                </Menu.Item>
-                <Menu.Item key="Add-Course" icon={<FileAddOutlined />}>
-                  Add Course
-                </Menu.Item>
-                <Menu.Item key="Edit-Course" icon={<EditOutlined />}>
-                  Edit Course
-                </Menu.Item>
-              </SubMenu>
-              <Menu.Item key="4" icon={<MessageOutlined />}>
-                Message
-              </Menu.Item>
-            </Menu>
-          </Sider> */
+  return {
+    props: { userId },
+  };
 }

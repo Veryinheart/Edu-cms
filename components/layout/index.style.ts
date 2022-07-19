@@ -65,3 +65,12 @@ export const StyledBreadcrumbContainer = styled(Breadcrumb)`
   margin: 0 16px;
   padding: 16px;
 `;
+
+export const TabNavContainer = styled.div`
+  margin-bottom: 0;
+  padding: 10px 20px 0 20px;
+  .ant-tabs-nav-list {
+    width: 100%;
+    justify-content: space-around;
+  }
+`;

@@ -4,7 +4,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Affix, Layout, Space, Dropdown, Menu, Badge, Avatar, Popover } from 'antd';
+import { Affix, Layout, Space, Dropdown, Menu, Badge, Avatar, Tabs, List, Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Appbreadcrumb from '../Appbreadcrumb';
 import Logout from '../Logout';
@@ -17,21 +17,31 @@ import {
   StyledContent,
   StyledHeaderLayout,
   LogOutWrapper,
+  TabNavContainer,
 } from './index.style';
 import { getRole } from '../../utils/service/storage';
 import Link from 'next/link';
 import { UserId } from '../../utils/service/user/types';
 import {
   getMessageStatisticById,
+  getMessageData,
+  MessageItem,
   MessageStatisticType,
 } from '../../utils/service/messages/messagesService';
+import { Paginator } from '../../utils/constants/api';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const { Content, Sider } = Layout;
+const { TabPane } = Tabs;
 
 type LayoutProps = {
   userRole?: string;
   userId?: number;
 };
+
+// const MessageListItem = ()=>{
+
+// }
 
 const logOutStyle = { color: 'white', fontSize: '20px' };
 
@@ -39,18 +49,48 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
   const [collapsed, setCollapsed] = useState(false);
   // const [loading,setLoading]=useState<boolean>(false);
   const [messageStatistic, setMessageStatistic] = useState<MessageStatisticType>();
+  const [messageList, setMessageList] = useState<MessageItem[]>([]);
+  const [messageTotal, setMessageTotal] = useState<number>(0);
+  const [notificationTotal, setNotificationTotal] = useState<number>(0);
+  const [notificationList, setNotificationList] = useState<MessageItem[]>([]);
+  const [messagePaginator, setMessagePaginator] = useState<Paginator>({ page: 1, limit: 10 });
+  const [notificationPaginator, setNotificationPaginator] = useState<Paginator>({
+    page: 1,
+    limit: 10,
+  });
 
   useEffect(() => {
-    const getMessageStatistic = async () => {
-      const res = await getMessageStatisticById(userId);
-      if (res) {
-        console.log(res);
-        setMessageStatistic(res?.data);
+    const getMessage = async () => {
+      const statisticResponse = await getMessageStatisticById(userId);
+      const messageListResponse = await getMessageData({
+        userId: userId,
+        type: 'message',
+        ...messagePaginator,
+      });
+      const notificationResponse = await getMessageData({
+        userId: userId,
+        type: 'notification',
+        ...notificationPaginator,
+      });
+
+      if (messageListResponse) {
+        console.log('first');
+        setMessageTotal(messageListResponse?.data?.total);
+        setMessageList((pre) => [...pre, ...messageListResponse?.data?.messages]);
+      }
+      if (notificationResponse) {
+        setNotificationTotal(notificationResponse?.data?.total);
+        setNotificationList((pre) => [...pre, ...notificationResponse?.data?.messages]);
+      }
+
+      if (statisticResponse) {
+        // console.log(statisticResponse);
+        setMessageStatistic(statisticResponse?.data);
       }
     };
 
-    getMessageStatistic();
-  }, [userId]);
+    getMessage();
+  }, [userId, messagePaginator, notificationPaginator]);
 
   const menu = (
     <Menu>
@@ -58,6 +98,79 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
         <Logout />
       </Menu.Item>
     </Menu>
+  );
+
+  const messageMenu = (
+    <div>
+      <Tabs
+        defaultActiveKey="1"
+        renderTabBar={(props, DefaultTabBar) => (
+          <TabNavContainer className="messageAndNotificationDiv">
+            <DefaultTabBar {...props} />
+          </TabNavContainer>
+        )}
+        style={{ overflow: 'scroll', maxHeight: '75vh' }}
+      >
+        <TabPane
+          tab={`Messages (${messageStatistic?.receive?.message?.unread})`}
+          key="notification"
+        >
+          <InfiniteScroll
+            dataLength={messageList.length}
+            next={() => {
+              console.log('[ mp ] >');
+              setMessagePaginator({ ...messagePaginator, page: messagePaginator.page + 1 });
+            }}
+            hasMore={messageList.length < messageTotal}
+            loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+            scrollableTarget="messageAndNotificationDiv"
+          >
+            <List
+              size="small"
+              dataSource={messageList}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={<Avatar icon={<UserOutlined />} />}
+                    title={item.from.nickname}
+                  />
+                </List.Item>
+              )}
+            />
+          </InfiniteScroll>
+        </TabPane>
+        <TabPane
+          tab={`Notification (${messageStatistic?.receive?.notification?.unread})`}
+          key="message"
+        >
+          <InfiniteScroll
+            dataLength={notificationList.length}
+            next={() => {
+              setNotificationPaginator({
+                ...notificationPaginator,
+                page: notificationPaginator.page + 1,
+              });
+            }}
+            hasMore={notificationList.length < notificationTotal}
+            loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+            scrollableTarget="messageAndNotificationDiv"
+          >
+            <List
+              size="small"
+              dataSource={notificationList}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={<Avatar icon={<UserOutlined />} />}
+                    title={item.from.nickname}
+                  />
+                </List.Item>
+              )}
+            />
+          </InfiniteScroll>
+        </TabPane>
+      </Tabs>
+    </div>
   );
 
   return (
@@ -98,12 +211,23 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
                   <Space style={{ marginRight: '3rem' }}>
                     <Badge
                       count={
+                        messageStatistic &&
                         messageStatistic?.receive?.message?.unread +
-                        messageStatistic?.receive?.notification?.unread
+                          messageStatistic?.receive?.notification?.unread
                       }
                       offset={[15, 0]}
                     >
-                      <BellOutlined style={logOutStyle} />
+                      <Dropdown
+                        overlay={messageMenu}
+                        trigger={['click']}
+                        overlayStyle={{
+                          border: '1px solid rgba(0, 0, 0, 0.06)',
+                          borderRadius: '10px',
+                          backgroundColor: 'white',
+                        }}
+                      >
+                        <BellOutlined style={logOutStyle} />
+                      </Dropdown>
                     </Badge>
                   </Space>
                   <Space size="large">

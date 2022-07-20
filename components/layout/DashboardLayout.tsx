@@ -105,69 +105,86 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
       <Tabs
         defaultActiveKey="1"
         renderTabBar={(props, DefaultTabBar) => (
-          <TabNavContainer className="messageAndNotificationDiv">
+          <TabNavContainer>
             <DefaultTabBar {...props} />
           </TabNavContainer>
         )}
-        style={{ overflow: 'scroll', maxHeight: '75vh' }}
       >
         <TabPane
           tab={`Messages (${messageStatistic?.receive?.message?.unread})`}
           key="notification"
         >
-          <InfiniteScroll
-            dataLength={messageList.length}
-            next={() => {
-              console.log('[ mp ] >');
-              setMessagePaginator({ ...messagePaginator, page: messagePaginator.page + 1 });
+          <div
+            id="messageDiv"
+            style={{
+              height: 400,
+              overflow: 'auto',
+              padding: '0 16px',
             }}
-            hasMore={messageList.length < messageTotal}
-            loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-            scrollableTarget="messageAndNotificationDiv"
           >
-            <List
-              size="small"
-              dataSource={messageList}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={<Avatar icon={<UserOutlined />} />}
-                    title={item.from.nickname}
-                  />
-                </List.Item>
-              )}
-            />
-          </InfiniteScroll>
+            <InfiniteScroll
+              dataLength={messageList.length}
+              next={() => {
+                console.log('[ mp ] >');
+                setMessagePaginator({ ...messagePaginator, page: messagePaginator.page + 1 });
+              }}
+              hasMore={messageList.length < messageTotal}
+              loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+              scrollableTarget="messageDiv"
+            >
+              <List
+                size="small"
+                dataSource={messageList}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<Avatar icon={<UserOutlined />} />}
+                      title={item.from.nickname}
+                    />
+                  </List.Item>
+                )}
+              />
+            </InfiniteScroll>
+          </div>
         </TabPane>
         <TabPane
           tab={`Notification (${messageStatistic?.receive?.notification?.unread})`}
           key="message"
         >
-          <InfiniteScroll
-            dataLength={notificationList.length}
-            next={() => {
-              setNotificationPaginator({
-                ...notificationPaginator,
-                page: notificationPaginator.page + 1,
-              });
+          <div
+            id="notificationDiv"
+            style={{
+              height: 400,
+              overflow: 'auto',
+              padding: '0 16px',
             }}
-            hasMore={notificationList.length < notificationTotal}
-            loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-            scrollableTarget="messageAndNotificationDiv"
           >
-            <List
-              size="small"
-              dataSource={notificationList}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={<Avatar icon={<UserOutlined />} />}
-                    title={item.from.nickname}
-                  />
-                </List.Item>
-              )}
-            />
-          </InfiniteScroll>
+            <InfiniteScroll
+              dataLength={notificationList.length}
+              next={() => {
+                setNotificationPaginator({
+                  ...notificationPaginator,
+                  page: notificationPaginator.page + 1,
+                });
+              }}
+              hasMore={notificationList.length < notificationTotal}
+              loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+              scrollableTarget="notificationDiv"
+            >
+              <List
+                size="small"
+                dataSource={notificationList}
+                renderItem={(item) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={<Avatar icon={<UserOutlined />} />}
+                      title={item.from.nickname}
+                    />
+                  </List.Item>
+                )}
+              />
+            </InfiniteScroll>
+          </div>
         </TabPane>
       </Tabs>
     </div>

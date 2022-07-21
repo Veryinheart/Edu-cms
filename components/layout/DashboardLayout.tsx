@@ -39,10 +39,6 @@ type LayoutProps = {
   userId?: number;
 };
 
-// const MessageListItem = ()=>{
-
-// }
-
 const logOutStyle = { color: 'white', fontSize: '20px' };
 
 const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
@@ -60,37 +56,49 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
   });
 
   useEffect(() => {
-    const getMessage = async () => {
+    const getStatistic = async () => {
       const statisticResponse = await getMessageStatisticById(userId);
-      const messageListResponse = await getMessageData({
-        userId: userId,
-        type: 'message',
-        ...messagePaginator,
-      });
+      if (statisticResponse) {
+        // console.log(statisticResponse);
+        setMessageStatistic(statisticResponse?.data);
+      }
+    };
+    getStatistic();
+  }, [userId]);
+
+  useEffect(() => {
+    const getNotification = async () => {
       const notificationResponse = await getMessageData({
         userId: userId,
         type: 'notification',
         ...notificationPaginator,
       });
 
-      if (messageListResponse) {
-        console.log('first');
-        setMessageTotal(messageListResponse?.data?.total);
-        setMessageList((pre) => [...pre, ...messageListResponse?.data?.messages]);
-      }
       if (notificationResponse) {
         setNotificationTotal(notificationResponse?.data?.total);
         setNotificationList((pre) => [...pre, ...notificationResponse?.data?.messages]);
       }
+    };
 
-      if (statisticResponse) {
-        // console.log(statisticResponse);
-        setMessageStatistic(statisticResponse?.data);
+    getNotification();
+  }, [userId, notificationPaginator]);
+
+  useEffect(() => {
+    const getMessage = async () => {
+      const messageListResponse = await getMessageData({
+        userId: userId,
+        type: 'message',
+        ...messagePaginator,
+      });
+
+      if (messageListResponse) {
+        setMessageTotal(messageListResponse?.data?.total);
+        setMessageList((pre) => [...pre, ...messageListResponse?.data?.messages]);
       }
     };
 
     getMessage();
-  }, [userId, messagePaginator, notificationPaginator]);
+  }, [userId, messagePaginator]);
 
   const menu = (
     <Menu>
@@ -125,7 +133,6 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
             <InfiniteScroll
               dataLength={messageList.length}
               next={() => {
-                console.log('[ mp ] >');
                 setMessagePaginator({ ...messagePaginator, page: messagePaginator.page + 1 });
               }}
               hasMore={messageList.length < messageTotal}
@@ -212,6 +219,7 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
             <SideMenu data={routes.get(getRole())} role={getRole()} />
           </Sider>
         </Affix>
+
         <Layout>
           <Affix>
             <StyledHeaderLayout>
@@ -257,7 +265,7 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
             </StyledHeaderLayout>
           </Affix>
 
-          <Content className="contentDiv">
+          <Content className="contentDiv" style={{ overflow: 'scroll' }}>
             <StyledBreadcrumbContainer>
               <Appbreadcrumb userRole={userRole} />
             </StyledBreadcrumbContainer>
@@ -273,11 +281,9 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  // console.log(context);
   const paths = context.resolvedUrl.split('/');
   const role = paths[2];
   const userId = UserId[role];
-  // console.log(userId);
 
   return {
     props: { userId },

@@ -72,7 +72,7 @@ const CourseDetail = (props: { id: number }) => {
 
               <H3>Start Time</H3>
               <Row>{data?.startTime}</Row>
-              <Badge status="success" offset={[5, 24]}>
+              <Badge status="success" dot={true} offset={[5, 24]}>
                 <H3>Status</H3>
               </Badge>
               <StepsRow>
@@ -98,15 +98,7 @@ const CourseDetail = (props: { id: number }) => {
               </Row>
 
               <H3>Description</H3>
-              {data?.detail !== 'no' ? (
-                <Row>{data?.detail}</Row>
-              ) : (
-                <Row>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum, iure soluta.
-                  Perspiciatis, odit perferendis suscipit alias aut voluptatem aliquam dolorem rerum
-                  animi tempore nostrum cum non temporibus rem cupiditate optio.
-                </Row>
-              )}
+              {data?.detail !== 'no' ? <Row>{data?.detail}</Row> : <Row>AAAAAAA</Row>}
               <H3>Chapter</H3>
               {data?.schedule && (
                 <Collapse defaultActiveKey={data.schedule.current}>

@@ -56,7 +56,7 @@ const TableChart = ({ course }: { course: StatisticsCourse }) => {
             yAxis: {
               labels: {
                 formatter: function () {
-                  return this.value.charAt(0);
+                  return this.value?.charAt(0);
                 },
               },
             },

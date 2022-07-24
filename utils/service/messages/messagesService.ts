@@ -1,6 +1,7 @@
 import { QueryPath } from '../../constants/api';
-import { getParamRequest } from '../request';
-import { IResponse } from '../apiConfig';
+import { getParamRequest, putRequest } from '../request';
+import { API_URL, IResponse } from '../apiConfig';
+import { getUserId } from '../storage';
 
 const path = QueryPath.messages;
 
@@ -41,6 +42,10 @@ interface MessageListResponse {
   total: number;
 }
 
+interface SuccessResponse {
+  data: true;
+}
+
 export const getMessageStatisticById = (
   id: number | string | string[] | undefined
 ): Promise<IResponse<MessageStatisticType> | undefined> => {
@@ -67,3 +72,20 @@ export const getMessageData = ({
     type: type,
   });
 };
+
+export const updateMessageAsRead = (
+  ids: number[]
+): Promise<IResponse<SuccessResponse> | undefined> => {
+  return putRequest<IResponse<SuccessResponse> | undefined>(path, {
+    ids: ids,
+    status: 1,
+  });
+};
+
+export function messageEvent(): EventSource {
+  const userId = getUserId();
+
+  return new EventSource(`${API_URL}/${path}/subscribe?userId=${userId}`, {
+    withCredentials: true,
+  });
+}

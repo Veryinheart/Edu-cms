@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
-import { getMessageData } from '../../../utils/service/messages/messagesService';
+import {
+  getMessageData,
+  MessageItem,
+  updateMessageAsRead,
+} from '../../../utils/service/messages/messagesService';
 import { MessageHeaderWrapper } from './index.style';
 import {
   Typography,
@@ -12,20 +16,33 @@ import {
   List,
   Skeleton,
   Divider,
+  Avatar,
 } from 'antd';
 
-import { DownOutlined } from '@ant-design/icons';
+import { AlertOutlined, DownOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons';
 import { UserId } from '../../../utils/service/user/types';
-import { MessageItem } from '../../../utils/service/messages/messagesService';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useMessageStatistic } from '../../../components/contexts/messageContext';
 
 const { Title, Text } = Typography;
+
+export const StyledMessageItem = ({ item }: { item: MessageItem }) => {
+  return (
+    <List.Item.Meta
+      avatar={<Avatar icon={<UserOutlined />} />}
+      title={<Text>{item?.from?.nickname}</Text>}
+      description={item.content}
+    />
+  );
+};
 
 const Message = ({ userId }: { userId: number }) => {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
   const [messageList, setMessageList] = useState<MessageItem[]>([]);
   const [messageType, setMessageType] = useState<string>('');
   const [total, setTotal] = useState<number>(0);
+
+  const { dispatch } = useMessageStatistic();
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     if (e.key === 'all') {
@@ -58,6 +75,24 @@ const Message = ({ userId }: { userId: number }) => {
       ]}
     />
   );
+
+  const handlerOnClick = async (item) => {
+    if (item.status === 1) {
+      return;
+    }
+
+    try {
+      const res = await updateMessageAsRead([item.id]);
+      console.log(res);
+
+      if (!!res) {
+        let target = null;
+        messageList.forEach(() => {
+          const result = messageList.find((value) => value.id === item.id);
+        });
+      }
+    } catch (error) {}
+  };
 
   useEffect(() => {
     const getMessageList = async () => {
@@ -108,12 +143,27 @@ const Message = ({ userId }: { userId: number }) => {
           scrollableTarget="scrollableDiv"
         >
           <List
+            itemLayout="vertical"
+            size="large"
             dataSource={messageList}
             renderItem={(item) => (
-              <List.Item key={`${Math.random() * item.id}`}>
-                <List.Item.Meta title={<Text>{item.createdAt}</Text>} description={item.content} />
-                <div>Content</div>
-              </List.Item>
+              <div>
+                <List.Item
+                  key={`${Math.random() * item.id}`}
+                  style={{ opacity: item.status ? 0.4 : 1 }}
+                  extra={
+                    <Space>
+                      {item.type === 'notification' ? <AlertOutlined /> : <MessageOutlined />}
+                    </Space>
+                  }
+                  onClick={() => {
+                    handlerOnClick(item);
+                  }}
+                >
+                  <StyledMessageItem item={item} />
+                  {item.createdAt}
+                </List.Item>
+              </div>
             )}
           />
         </InfiniteScroll>

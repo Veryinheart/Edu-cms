@@ -4,7 +4,19 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Affix, Layout, Space, Dropdown, Menu, Badge, Avatar, Tabs, List, Skeleton } from 'antd';
+import {
+  Affix,
+  Layout,
+  Space,
+  Dropdown,
+  Menu,
+  Badge,
+  Avatar,
+  Tabs,
+  List,
+  Skeleton,
+  notification,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import Appbreadcrumb from '../Appbreadcrumb';
 import Logout from '../Logout';
@@ -26,10 +38,12 @@ import {
   getMessageStatisticById,
   getMessageData,
   MessageItem,
-  MessageStatisticType,
+  messageEvent,
 } from '../../utils/service/messages/messagesService';
 import { Paginator } from '../../utils/constants/api';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { StyledMessageItem } from '../../pages/dashboard/manager/message';
+import { Action, useMessageStatistic } from '../contexts/messageContext';
 
 const { Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -43,8 +57,7 @@ const logOutStyle = { color: 'white', fontSize: '20px' };
 
 const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
   const [collapsed, setCollapsed] = useState(false);
-  // const [loading,setLoading]=useState<boolean>(false);
-  const [messageStatistic, setMessageStatistic] = useState<MessageStatisticType>();
+  // const [messageStatistic, setMessageStatistic] = useState<MessageStatisticType>();
   const [messageList, setMessageList] = useState<MessageItem[]>([]);
   const [messageTotal, setMessageTotal] = useState<number>(0);
   const [notificationTotal, setNotificationTotal] = useState<number>(0);
@@ -55,16 +68,58 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
     limit: 10,
   });
 
+  const { state, dispatch } = useMessageStatistic();
+
+  //sse
+  useEffect(() => {
+    const sse = messageEvent();
+    sse.onmessage = (event) => {
+      let { data } = event;
+      data = JSON.parse(data || {});
+
+      if (data.type !== 'heartbeat') {
+        const content = data.content as MessageItem;
+
+        if (content.type === 'message') {
+          notification.info({
+            message: `You have a message from ${content.from.nickname}`,
+            description: content.content,
+          });
+        }
+        dispatch({ type: Action.INCREMENT, payload: { type: content.type, count: 1 } });
+      }
+    };
+
+    return () => {
+      sse.close();
+      dispatch({ type: Action.RESET });
+    };
+  }, [dispatch]);
+
+  //statistic
   useEffect(() => {
     const getStatistic = async () => {
       const statisticResponse = await getMessageStatisticById(userId);
       if (statisticResponse) {
-        // console.log(statisticResponse);
-        setMessageStatistic(statisticResponse?.data);
+        console.log(statisticResponse);
+        // setMessageStatistic(statisticResponse?.data);
+
+        dispatch({
+          type: Action.INCREMENT,
+          payload: { type: 'message', count: statisticResponse?.data.receive.message.unread },
+        });
+
+        dispatch({
+          type: Action.INCREMENT,
+          payload: {
+            type: 'notification',
+            count: statisticResponse?.data.receive.notification.unread,
+          },
+        });
       }
     };
     getStatistic();
-  }, [userId]);
+  }, [userId, dispatch]);
 
   useEffect(() => {
     const getNotification = async () => {
@@ -118,10 +173,7 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
           </TabNavContainer>
         )}
       >
-        <TabPane
-          tab={`Messages (${messageStatistic?.receive?.message?.unread})`}
-          key="notification"
-        >
+        <TabPane tab={`Messages (${state.message})`} key="notification">
           <div
             id="messageDiv"
             style={{
@@ -143,21 +195,16 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
                 size="small"
                 dataSource={messageList}
                 renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<Avatar icon={<UserOutlined />} />}
-                      title={item.from.nickname}
-                    />
+                  <List.Item style={{ opacity: item.status ? 0.4 : 1 }}>
+                    <StyledMessageItem item={item} />
+                    {item.createdAt}
                   </List.Item>
                 )}
               />
             </InfiniteScroll>
           </div>
         </TabPane>
-        <TabPane
-          tab={`Notification (${messageStatistic?.receive?.notification?.unread})`}
-          key="message"
-        >
+        <TabPane tab={`Notification (${state.notification})`} key="message">
           <div
             id="notificationDiv"
             style={{
@@ -182,11 +229,9 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
                 size="small"
                 dataSource={notificationList}
                 renderItem={(item) => (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={<Avatar icon={<UserOutlined />} />}
-                      title={item.from.nickname}
-                    />
+                  <List.Item style={{ opacity: item.status ? 0.4 : 1 }}>
+                    <StyledMessageItem item={item} />
+                    {item.createdAt}
                   </List.Item>
                 )}
               />
@@ -234,14 +279,7 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
               <div>
                 <LogOutWrapper>
                   <Space style={{ marginRight: '3rem' }}>
-                    <Badge
-                      count={
-                        messageStatistic &&
-                        messageStatistic?.receive?.message?.unread +
-                          messageStatistic?.receive?.notification?.unread
-                      }
-                      offset={[15, 0]}
-                    >
+                    <Badge count={state.total} offset={[15, 0]}>
                       <Dropdown
                         overlay={messageMenu}
                         trigger={['click']}
@@ -249,6 +287,7 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
                           border: '1px solid rgba(0, 0, 0, 0.06)',
                           borderRadius: '10px',
                           backgroundColor: 'white',
+                          width: '25vw',
                         }}
                       >
                         <BellOutlined style={logOutStyle} />

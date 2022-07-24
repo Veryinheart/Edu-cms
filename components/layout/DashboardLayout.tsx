@@ -75,6 +75,8 @@ const Dashboard: React.FC<LayoutProps> = ({ children, userRole, userId }) => {
     const sse = messageEvent();
     sse.onmessage = (event) => {
       let { data } = event;
+      // console.log(event);
+      // console.log(data);
       data = JSON.parse(data || {});
 
       if (data.type !== 'heartbeat') {

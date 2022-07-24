@@ -39,6 +39,7 @@ export const StyledMessageItem = ({ item }: { item: MessageItem }) => {
 const Message = ({ userId }: { userId: number }) => {
   const [paginator, setPaginator] = useState({ page: 1, limit: 20 });
   const [messageList, setMessageList] = useState<MessageItem[]>([]);
+
   const [messageType, setMessageType] = useState<string>('');
   const [total, setTotal] = useState<number>(0);
 
@@ -77,21 +78,27 @@ const Message = ({ userId }: { userId: number }) => {
   );
 
   const handlerOnClick = async (item) => {
+    // console.log(item);
     if (item.status === 1) {
       return;
     }
 
     try {
       const res = await updateMessageAsRead([item.id]);
-      console.log(res);
 
-      if (!!res) {
-        let target = null;
-        messageList.forEach(() => {
-          const result = messageList.find((value) => value.id === item.id);
+      if (res.code === 200 && res.msg === 'success') {
+        const data = messageList.map((msg) => {
+          if (msg.id === item.id) {
+            msg.status = 1;
+          }
+          return msg;
         });
+        setMessageList(data);
+        dispatch({ type: 'decrement', payload: { type: item.type, count: 1 } });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
